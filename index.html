@@ -10,20 +10,28 @@
 :root{--bg:#F3EFE4;--ink:#1F2A1F;--forest:#2F4A35;--amber:#D9822B;--track:#D3CDB9;--warn:#9A4A1C;--sub:#4A5A4C}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:#E4DFD0;font-family:'Noto Sans JP',system-ui,sans-serif;color:var(--ink)}
-button{font-family:inherit;cursor:pointer}
-button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+button,select{font-family:inherit}
+button{cursor:pointer}
+button:focus-visible,select:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 .app{position:relative;width:100%;max-width:430px;height:100vh;height:100dvh;margin:0 auto;background:var(--bg);overflow:hidden}
-.screen{position:absolute;inset:0;padding:20px 18px 18px;display:flex;flex-direction:column;gap:14px;opacity:0;visibility:hidden;transition:opacity .35s ease,visibility .35s;overflow-y:auto}
+.screen{position:absolute;inset:0;padding:20px 18px 24px;display:flex;flex-direction:column;gap:14px;opacity:0;visibility:hidden;transition:opacity .35s ease,visibility .35s;overflow-y:auto}
 .screen.active{opacity:1;visibility:visible}
 .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .day{font-size:12px;color:var(--sub)}
-.name{font-size:18px;font-weight:700}
+.name{font-size:17px;font-weight:700}
 .pts{display:flex;align-items:center;gap:6px;background:var(--forest);color:var(--bg);border-radius:999px;padding:8px 14px;font-size:15px;font-weight:700;white-space:nowrap}
-.stage{position:relative;flex:0 0 auto;height:min(300px,36vh);min-height:200px;border-radius:20px;overflow:hidden;border:2px solid var(--forest);background:#DCE6D4}
+.stage{position:relative;flex:0 0 auto;height:min(300px,34vh);min-height:190px;border-radius:20px;overflow:hidden;border:2px solid var(--forest);background:#DCE6D4}
 .stage svg{display:block;width:100%;height:100%}
 .larva{transform-origin:170px 200px;animation:breathe 3.2s ease-in-out infinite}
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
 @media (prefers-reduced-motion:reduce){.larva{animation:none}.screen{transition:none}}
+.seasonbar{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.chip-s{font-size:13px;color:var(--sub)}
+.small-btn{min-height:44px;padding:0 14px;border:2px solid var(--forest);background:transparent;border-radius:12px;font-size:13px;font-weight:500;color:var(--ink)}
+.cases{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.case{min-height:44px;padding:0 12px;border:2px solid var(--forest);background:transparent;border-radius:12px;font-size:13px;color:var(--ink)}
+.case[aria-pressed="true"]{background:var(--forest);color:var(--bg)}
+.cap{font-size:12px;color:var(--sub)}
 .meters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
 .m-head{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
 .bar{height:10px;background:var(--track);border-radius:6px;overflow:hidden}
@@ -34,15 +42,51 @@ button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 .care button:active{background:#E3DEC9}
 .toast{min-height:20px;font-size:13px;color:var(--sub);text-align:center}
 .spacer{flex-grow:1}
-.nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:end}
+.nav{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:10px;align-items:end}
 .nav button{border:0;border-radius:16px;font-size:14px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:72px;background:var(--forest);color:var(--bg)}
 .nav button.go{min-height:88px;background:var(--amber);color:var(--ink);font-size:15px}
 .nav svg{width:24px;height:24px}
 .nav .go svg{width:28px;height:28px}
 .back{align-self:flex-start;min-height:44px;padding:0 16px;border:2px solid var(--forest);background:transparent;border-radius:12px;font-size:14px;color:var(--ink)}
 h2{margin:0;font-size:22px}
+h3{margin:6px 0 0;font-size:15px}
 .stub{border:2px dashed var(--forest);border-radius:16px;padding:18px;font-size:14px;line-height:1.7;color:var(--sub)}
 .stub b{color:var(--ink)}
+.note{font-size:12px;color:var(--sub);line-height:1.6}
+.sitrep{font-size:13px;line-height:1.7;background:#E9E4D2;border-radius:12px;padding:10px 12px}
+.tilemap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;grid-template-areas:". . hokkaido" ". . tohoku" ". chubu kanto" "chushi kinki ." "kyushu . ." ". . okinawa";padding:10px;border-radius:16px;background:#E2EBD9;border:2px solid var(--forest)}
+.tile{min-height:56px;border:2px solid var(--forest);background:var(--bg);color:var(--ink);border-radius:12px;font-size:14px;font-weight:700;line-height:1.3;padding:4px}
+.tile small{display:block;font-size:11px;font-weight:400;color:var(--sub)}
+.tile[aria-pressed="true"]{background:var(--forest);color:var(--bg)}
+.tile[aria-pressed="true"] small{color:#DCE6D4}
+.seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.seg button{min-height:48px;border:2px solid var(--forest);background:transparent;color:var(--ink);border-radius:12px;font-size:14px;font-weight:500;line-height:1.3}
+.seg button small{display:block;font-size:11px;color:var(--sub)}
+.seg button[aria-pressed="true"]{background:var(--forest);color:var(--bg)}
+.seg button[aria-pressed="true"] small{color:#DCE6D4}
+.seg button:disabled{opacity:.45;cursor:default}
+.seg4{grid-template-columns:repeat(4,minmax(0,1fr))}
+select{min-height:44px;border:2px solid var(--forest);border-radius:12px;background:var(--bg);color:var(--ink);font-size:14px;padding:0 10px;width:100%}
+.primary{min-height:56px;border:0;border-radius:16px;background:var(--amber);color:var(--ink);font-size:16px;font-weight:700}
+.primary:disabled{opacity:.5;cursor:default}
+.result{background:#fff;border:2px solid var(--forest);border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.8;display:none}
+.result.show{display:block}
+.result ul{margin:6px 0 0;padding-left:18px}
+.dex{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.dex li{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:8px 10px;background:#E9E4D2;border-radius:10px}
+.dex li span:last-child{color:var(--sub);text-align:right}
+.dex li small{display:block;color:var(--sub);font-size:11px}
+.dex li .small-btn{min-height:44px;flex:0 0 auto}
+.modal{position:absolute;inset:0;background:rgba(20,30,20,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:10}
+.modal.show{display:flex}
+.modal .box{background:var(--bg);border-radius:18px;padding:18px;width:100%;max-height:82%;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+.modal h2{font-size:18px}
+.modal ul{margin:0;padding-left:18px;font-size:14px;line-height:1.8}
+.modal .btns{display:grid;gap:8px}
+.modal .btns button{min-height:48px;border-radius:12px;border:2px solid var(--forest);background:transparent;color:var(--ink);font-size:14px;font-weight:500}
+.modal .btns button.p{background:var(--amber);border-color:var(--amber);font-weight:700}
+input.num{min-height:44px;border:2px solid var(--forest);border-radius:12px;background:var(--bg);color:var(--ink);font-size:16px;padding:0 10px;width:100%;font-family:inherit}
+input.num:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -52,16 +96,21 @@ h2{margin:0;font-size:22px}
 <div class="top">
 <div>
 <div class="day" id="day">飼育 1日目</div>
-<div class="name">カブトムシ(幼虫・2齢)</div>
+<div class="name" id="selname">個体なし</div>
 </div>
 <div class="pts" aria-label="所持ポイント">
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 10h6"/></svg>
-<span id="pts">1,280 pt</span>
+<span id="pts">0 pt</span>
 </div>
 </div>
 
+<div class="seasonbar">
+<span class="chip-s" id="seasonlabel"></span>
+<button type="button" class="small-btn" id="next-season">季節を次へ</button>
+</div>
+
 <div class="stage">
-<svg viewBox="0 0 354 296" preserveAspectRatio="xMidYMid slice" role="img" aria-label="飼育ケースの中でマットに潜るカブトムシの幼虫">
+<svg viewBox="0 0 354 296" preserveAspectRatio="xMidYMid slice" role="img" aria-label="飼育ケースの中の個体" id="homeart">
 <rect width="354" height="296" fill="#DCE6D4"/>
 <rect y="110" width="354" height="186" fill="#5A3E2B"/>
 <rect y="110" width="354" height="10" fill="#6E4D37"/>
@@ -70,20 +119,44 @@ h2{margin:0;font-size:22px}
 <circle cx="150" cy="270" r="3" fill="#7A5740"/>
 <rect x="40" y="70" width="90" height="26" rx="4" fill="#8A6A3F"/>
 <rect x="46" y="76" width="78" height="8" rx="2" fill="#A98657"/>
-<g class="larva">
+<g class="larva" id="g-larva">
 <path d="M120 200 C120 160 180 150 215 175 C250 200 235 245 195 245 C165 245 160 220 180 212" fill="none" stroke="#F1E3C2" stroke-width="30" stroke-linecap="round"/>
 <circle cx="125" cy="205" r="17" fill="#C8782B"/><circle cx="119" cy="201" r="2.5" fill="#1F2A1F"/>
 <path d="M150 185 C165 168 190 165 205 172" fill="none" stroke="#E2D2AB" stroke-width="3" stroke-linecap="round"/>
 <path d="M205 232 C220 226 232 214 234 200" fill="none" stroke="#E2D2AB" stroke-width="3" stroke-linecap="round"/>
 </g>
+<g id="g-pupa" style="display:none">
+<ellipse cx="195" cy="218" rx="30" ry="52" fill="#B98A4E" transform="rotate(-25 195 218)"/>
+<path d="M172 190 q22 -8 40 8 M168 212 q24 -8 44 8 M170 236 q24 -8 40 6" stroke="#8C6532" stroke-width="3" fill="none" stroke-linecap="round"/>
+<ellipse cx="148" cy="190" rx="8" ry="10" fill="#8C6532"/>
+</g>
+<g id="g-beetle" style="display:none">
+<ellipse cx="195" cy="205" rx="62" ry="36" fill="#5B2F1A"/>
+<path d="M150 190 Q195 170 240 190" stroke="#7A4126" stroke-width="4" fill="none"/>
+<circle cx="130" cy="198" r="17" fill="#3A1F12"/>
+<path d="M120 188 C98 168 94 146 112 128" stroke="#3A1F12" stroke-width="9" fill="none" stroke-linecap="round"/>
+<path d="M112 128 l-14 8" stroke="#3A1F12" stroke-width="6" stroke-linecap="round"/>
+<path d="M150 236 l-12 18 M190 240 l0 20 M230 236 l12 18" stroke="#2A170E" stroke-width="5" stroke-linecap="round"/>
+</g>
+<g id="g-stag" style="display:none">
+<ellipse cx="195" cy="205" rx="58" ry="32" fill="#2B1D17"/>
+<ellipse cx="195" cy="196" rx="40" ry="10" fill="#3B2A22"/>
+<circle cx="132" cy="200" r="18" fill="#1F1511"/>
+<path d="M118 192 C100 184 92 170 100 160" stroke="#1F1511" stroke-width="7" fill="none" stroke-linecap="round"/>
+<path d="M122 206 C104 212 96 226 104 236" stroke="#1F1511" stroke-width="7" fill="none" stroke-linecap="round"/>
+<path d="M150 232 l-12 18 M190 236 l0 20 M230 232 l12 18" stroke="#15100D" stroke-width="5" stroke-linecap="round"/>
+</g>
 </svg>
 </div>
 
+<div class="cases" id="cases" role="group" aria-label="飼育ケース"></div>
+<div class="cap" id="inv"></div>
+
 <div class="meters">
-<div><div class="m-head"><span>満腹度</span><b id="v-food"></b></div><div class="bar"><i id="b-food"></i></div></div>
-<div><div class="m-head"><span>マットの湿り</span><b id="v-wet"></b></div><div class="bar"><i id="b-wet"></i></div></div>
-<div><div class="m-head"><span>温度</span><b id="v-temp">23℃</b></div><div class="bar"><i style="width:60%"></i></div></div>
-<div><div class="m-head"><span>マットの鮮度</span><b id="v-fresh"></b></div><div class="bar"><i id="b-fresh"></i></div></div>
+<div><div class="m-head"><span id="l-food">満腹度</span><b id="v-food"></b></div><div class="bar"><i id="b-food"></i></div></div>
+<div><div class="m-head"><span id="l-wet">マットの湿り</span><b id="v-wet"></b></div><div class="bar"><i id="b-wet"></i></div></div>
+<div><div class="m-head"><span>温度</span><b id="v-temp">23℃</b></div><div class="bar"><i id="b-temp" style="width:60%"></i></div></div>
+<div><div class="m-head"><span id="l-fresh">マットの鮮度</span><b id="v-fresh"></b></div><div class="bar"><i id="b-fresh"></i></div></div>
 </div>
 
 <div class="care">
@@ -91,6 +164,11 @@ h2{margin:0;font-size:22px}
 <button type="button" id="a-mat">マット交換</button>
 <button type="button" id="a-mist">霧吹き</button>
 </div>
+<div class="care" id="breedrow" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+<button type="button" id="a-pair">ペアにする</button>
+<button type="button" id="a-lay">産卵セットを組む</button>
+</div>
+<div class="note" id="breednote"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <div class="spacer"></div>
@@ -114,57 +192,634 @@ h2{margin:0;font-size:22px}
 <section class="screen" id="shop" aria-label="ショップ画面">
 <button type="button" class="back" data-go="home">← 育成画面へ</button>
 <h2>ショップ</h2>
-<div class="stub"><b>未設計</b><br>飼育用品(マット、ゼリー、止まり木、霧吹き、飼育ケース)の購入と、疑似委託販売をここに置く予定です。</div>
-</section>
+<h3>飼育用品</h3>
+<ul class="dex" id="items"></ul>
+<div class="note" id="buy-msg" role="status" aria-live="polite"></div>
+<h3>委託販売</h3>
+<div class="note" id="mkt-note"></div>
+<label for="sell-ins" class="note">出品する個体</label>
+<select id="sell-ins"></select>
+<div class="sitrep" id="sell-info"></div>
+<label for="sell-price" class="note">希望価格(円)</label>
+<input type="number" id="sell-price" class="num" min="10" step="10" inputmode="numeric">
+<button type="button" class="primary" id="sell-go">委託に出す</button>
+<div class="note" id="sell-msg" role="status" aria-live="polite"></div>
+<h3 id="slot-h">出品中</h3>
+<ul class="dex" id="listings"></ul>
+<h3>売買の記録</h3>
+<ul class="dex" id="log"></ul>
+<div class="note">売れた場合、手数料10%を引いた額が入ります。売れ残ると、季節ごとに維持費100円がかかり、状態が落ちて値打ちが下がります。ゲーム内の疑似取引で、実在の個体の売買ではありません。</div>
+<h3>死亡した個体(標本の依頼は今だけ)</h3>
+<ul class="dex" id="deadlist"></ul>
+<h3>標本</h3>
+<ul class="dex" id="speclist"></ul>
+<div class="note">標本づくりはゲーム内の店に依頼します(依頼料400円)。実店舗のサービスではありません。寿命を迎えた、羽化不全でない成虫だけが標本にできます。依頼すると、次に季節を進めたときに完成します。</div></section>
 
 <section class="screen" id="gather" aria-label="採集画面">
 <button type="button" class="back" data-go="home">← 育成画面へ</button>
 <h2>採集に出かける</h2>
-<div class="stub"><b>未設計</b><br>場所・時間帯・季節で出現が変わる採集をここに置く予定です。</div>
+<div class="stage" style="height:180px;min-height:180px" id="forest"></div>
+<div class="sitrep" id="sitrep" role="status" aria-live="polite"></div>
+
+<h3>場所を選ぶ</h3>
+<div class="tilemap" id="tilemap"></div>
+<div class="note">簡易地図(位置関係のみ)。距離の目安で移動費が決まり、出発地と同じ地域は無料です。</div>
+
+<h3>出発地</h3>
+<label for="locsel" class="note">旅行先などで変えられます(通信による自動推定は未実装)</label>
+<select id="locsel"></select>
+
+<h3>採集方法</h3>
+<div class="seg" id="methods"></div>
+
+<h3>時間帯</h3>
+<div class="seg seg4" id="tods"></div>
+<div class="note" id="todnote"></div>
+
+<div class="note" id="plan"></div>
+<button type="button" class="primary" id="go-gather">出発する</button>
+<div class="result" id="result" role="status" aria-live="polite"></div>
+
+<h3>この地域の昆虫</h3>
+<ul class="dex" id="dex"></ul>
+<div class="note">種のデータは暫定です。分布・保護指定は環境省の資料で確認してから確定します。</div>
 </section>
 
 <section class="screen" id="rank" aria-label="ランキング画面">
 <button type="button" class="back" data-go="home">← 育成画面へ</button>
 <h2>ランキング</h2>
-<div class="stub"><b>未設計</b><br>何を競うか(図鑑達成数、羽化数、個体サイズ等)が未決定です。</div>
+<div class="stub"><b>未設計</b><br>何を競うか(図鑑達成数、羽化数、個体サイズ等)が未決定です。サーバー側の集計が前提になります。</div>
 </section>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="m-title"><div class="box"><h2 id="m-title"></h2><ul id="m-lines"></ul><div class="btns" id="m-btns"></div></div></div>
 
 </div>
 
 <script>
 (function(){
-var KEY='jf-ikusei-v0';
-var s={food:72,wet:55,fresh:38,pts:1280,day:1};
-try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);if(o&&typeof o.food==='number')s=o;}}catch(e){}
+'use strict';
+var KEY='jf-ikusei-v1',OLD='jf-ikusei-v0';
+var SEA=['春','夏','秋','冬'];
+var REG=[
+{id:'hokkaido',n:'北海道',idx:0,s:[[4,5],[6,8],[9,10],[11,3]],t:[6,20,10,-3]},
+{id:'tohoku',n:'東北',idx:1,s:[[4,5],[6,8],[9,11],[12,3]],t:[10,24,13,0]},
+{id:'kanto',n:'関東',idx:2,s:[[3,5],[6,8],[9,11],[12,2]],t:[14,27,17,5]},
+{id:'chubu',n:'中部',idx:3,s:[[3,5],[6,8],[9,11],[12,2]],t:[13,26,15,3]},
+{id:'kinki',n:'近畿',idx:4,s:[[3,5],[6,8],[9,11],[12,2]],t:[15,28,18,6]},
+{id:'chushi',n:'中国四国',idx:5,s:[[3,5],[6,8],[9,11],[12,2]],t:[15,27,17,6]},
+{id:'kyushu',n:'九州',idx:6,s:[[3,5],[6,8],[9,11],[12,2]],t:[16,28,19,8]},
+{id:'okinawa',n:'沖縄',idx:7,s:[[3,4],[5,10],[11,11],[12,2]],t:[21,29,25,17]}
+];
+var RID={};REG.forEach(function(r){RID[r.id]=r;});
+var ALLJ=['hokkaido','tohoku','kanto','chubu','kinki','chushi','kyushu'];
+var SP=[
+{id:'kabuto',n:'カブトムシ',r:['tohoku','kanto','chubu','kinki','chushi','kyushu'],w:[.05,1,.15,0],m:50,f:40,sd:7,base:.45,aff:{sap:1.2,light:1,rot:.6,trap:1.3}},
+{id:'nokogiri',n:'ノコギリクワガタ',r:ALLJ,w:[0,1,.2,0],m:55,f:38,sd:7,base:.4,aff:{sap:1.1,light:1,rot:.3,trap:1}},
+{id:'miyama',n:'ミヤマクワガタ',r:ALLJ,w:[0,1,.1,0],m:60,f:38,sd:7,base:.3,aff:{sap:.8,light:1.5,rot:.3,trap:.5}},
+{id:'kokuwa',n:'コクワガタ',r:ALLJ,w:[.4,1,.5,.3],m:45,f:30,sd:6,base:.5,aff:{sap:1.1,light:.6,rot:1.2,trap:1.2}},
+{id:'hirata',n:'ヒラタクワガタ',r:['kanto','chubu','kinki','chushi','kyushu'],w:[.1,1,.2,.3],m:65,f:40,sd:8,base:.3,aff:{sap:1,light:.5,rot:1.2,trap:.8}},
+{id:'suji',n:'スジクワガタ',r:['kanto','chubu','kinki','chushi','kyushu'],w:[.2,1,.4,.1],m:23,f:20,sd:3,base:.4,aff:{sap:.9,light:.8,rot:1,trap:.9}},
+{id:'akaashi',n:'アカアシクワガタ',r:['hokkaido','tohoku','chubu'],w:[0,1,.1,0],m:38,f:30,sd:4,base:.2,aff:{sap:.6,light:1.2,rot:.6,trap:.3}},
+{id:'okihirata',n:'オキナワヒラタクワガタ',r:['okinawa'],w:[.4,1,.7,.2],m:60,f:38,sd:8,base:.4,aff:{sap:1,light:.6,rot:1.2,trap:.8}},
+{id:'okikabuto',n:'オキナワカブト',r:['okinawa'],w:[.3,1,.5,0],m:45,f:35,sd:6,base:.4,aff:{sap:1.2,light:1,rot:.6,trap:1.3}},
+{id:'okinokogiri',n:'オキナワノコギリクワガタ',r:['okinawa'],w:[.3,1,.5,0],m:48,f:34,sd:6,base:.3,aff:{sap:1.1,light:1,rot:.3,trap:1}},
+{id:'yanbaru',n:'ヤンバルテナガコガネ',r:['okinawa'],w:[0,.6,0,0],base:.5,prot:true,aff:{sap:1,light:.6,rot:.3,trap:.2}}
+];
+var SPID={};SP.forEach(function(p){SPID[p.id]=p;});
+var METH={
+sap:{n:'樹液採集',cost:0,t:[.15,.8,1,.7],moon:.15,rain:.4,note:'夕方〜夜明けが中心'},
+light:{n:'灯火採集',cost:500,t:[0,.3,1,.1],moon:.7,rain:.2,note:'月明かりの強い夜は不調。電池・燃料代'},
+rot:{n:'朽ち木割り',cost:0,t:[1,1,.5,.8],moon:0,rain:.5,note:'冬・春は幼虫が見つかる。割った木は元に戻す'},
+trap:{n:'トラップ',cost:300,t:[1,1,1,1],moon:.1,rain:.5,note:'夕に仕掛け、翌朝に回収。餌代'}
+};
+var MORDER=['sap','light','rot','trap'];
+var TIMES=['昼','夕','夜','明け方'];
+
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function seasonIdx(reg,month){
+for(var i=0;i<4;i++){var a=reg.s[i][0],b=reg.s[i][1];
+if(a<=b?(month>=a&&month<=b):(month>=a||month<=b))return i;}
+return 0;}
+function nextSeasonMonth(reg,month){
+var cur=seasonIdx(reg,month);
+for(var k=1;k<=12;k++){var m=((month-1+k)%12)+1;if(seasonIdx(reg,m)!==cur)return m;}
+return month;}
+function gauss(){var u=1-Math.random(),v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+function fmt(n){return n.toLocaleString('ja-JP');}
+
+var real=new Date();
+var def={food:72,wet:55,fresh:38,pts:1280,day:1,month:real.getMonth()+1,loc:'kanto',cases:2,nid:2,sel:1,
+insects:[{id:1,sp:'kabuto',stage:'幼虫',sex:'?',size:0,w:12,food:72,wet:55,fresh:38,g:1,age:0,touched:false,defect:false,place:'不明',cm:real.getMonth()+1}],dex:{kabuto:{seen:1,caught:1}},listings:[],lid:1,log:[],dead:[],pending:[],spec:[],t:Date.now(),inv:{mat:3,jelly:3,set:0}};
+function load(){
+var o=null;
+try{var r=localStorage.getItem(KEY)||localStorage.getItem(OLD);if(r)o=JSON.parse(r);}catch(e){}
+var x=JSON.parse(JSON.stringify(def));
+if(o&&typeof o==='object'){for(var k in o){x[k]=o[k];}}
+if(!Array.isArray(x.insects))x.insects=def.insects;
+if(!RID[x.loc])x.loc='kanto';
+if(!(x.month>=1&&x.month<=12))x.month=def.month;
+if(!x.dex||typeof x.dex!=='object')x.dex={};
+if(!Array.isArray(x.listings))x.listings=[];
+if(!Array.isArray(x.log))x.log=[];
+if(!(x.lid>=1))x.lid=1;
+['dead','pending','spec'].forEach(function(k){if(!Array.isArray(x[k]))x[k]=[];});
+if(!(x.t>0))x.t=Date.now();
+if(!x.inv||typeof x.inv!=='object')x.inv={mat:3,jelly:3,set:0};
+['mat','jelly','set'].forEach(function(k){if(!(x.inv[k]>=0))x.inv[k]=0;});
+if(!(x.cases>=1))x.cases=2;
+function fix(i){
+var d={food:typeof x.food==='number'?x.food:70,wet:typeof x.wet==='number'?x.wet:60,fresh:typeof x.fresh==='number'?x.fresh:80,g:i.stage==='幼虫'?1:0,age:0,touched:false,defect:false,place:'不明',cm:x.month,gene:1,cbf:0,mated:false,laying:false,hurt:false};
+for(var k in d){if(i[k]===undefined)i[k]=d[k];}}
+x.insects.forEach(fix);
+x.listings.forEach(function(L){if(L&&L.ins)fix(L.ins);});
+return x;}
+var s=load();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
+var dest=s.loc,method='sap',tod=2,pendingRestore=false;
+
+function $(id){return document.getElementById(id);}
 function clamp(v){return Math.max(0,Math.min(100,v));}
-function setBar(id,val,warnBelow){
-document.getElementById('b-'+id).style.width=val+'%';
-document.getElementById('b-'+id).className=val<warnBelow?'low':'';
-document.getElementById('v-'+id).textContent=val+'%';
+
+/* ---------- 環境 ---------- */
+function travelCost(from,to){
+if(from===to)return 0;
+var c=Math.abs(RID[from].idx-RID[to].idx)*800;
+if(from==='okinawa'||to==='okinawa')c+=1200;
+return c;}
+function env(destId){
+var reg=RID[destId],si=seasonIdx(reg,s.month);
+var seed=((s.day*2654435761)>>>0)^(reg.idx*40503)^(s.month*977);
+var r=mulberry32(seed);
+var x=r(),w;
+if(si===3&&(destId==='hokkaido'||destId==='tohoku')){w=x<.4?'雪':(x<.75?'曇':'晴');}
+else{var pr=si===1?.25:.2;w=x<pr?'雨':(x<pr+.3?'曇':'晴');}
+var temp=Math.round(reg.t[si]+(r()-.5)*6);
+return{si:si,weather:w,temp:temp};}
+function moon(){
+var ref=Date.UTC(2000,0,6,18,14),days=(Date.now()-ref)/86400000;
+var age=((days%29.530588)+29.530588)%29.530588;
+return{age:age,bright:(1-Math.cos(2*Math.PI*age/29.530588))/2};}
+function chance(sp,e,mo){
+var M=METH[method];
+var w=sp.w[e.si];
+if(!w)return 0;
+var tf=M.t[tod];
+var mf=1-M.moon*mo.bright;
+var wf=(e.weather==='雨'||e.weather==='雪')?M.rain:1;
+var tmp=1;
+if(method!=='rot'){var t=e.temp;tmp=t<=5?.05:(t<12?.25:(t<18?.7:(t<=30?1:.9)));}
+var p=sp.base*w*(sp.aff[method]||.5)*tf*mf*wf*tmp;
+return Math.max(0,Math.min(.9,p));}
+
+/* ---------- 森の絵 ---------- */
+function forestSVG(reg,si,t){
+var okiWinter=(si===3&&reg.id==='okinawa');
+var snow=(si===3&&!okiWinter);
+var PAL=[{sky:'#CFE8F0',l1:'#8FC46B',l2:'#B7DB8F',g:'#7DA05A'},{sky:'#BFE3F2',l1:'#2F7A3A',l2:'#3F8F4A',g:'#4F7F3F'},{sky:'#EBDDC8',l1:'#C9622B',l2:'#E0A030',g:'#8A6A3A'},{sky:'#D5E8EE',l1:'#3F7F4A',l2:'#4F9158',g:'#5C8A4C'}];
+var P=PAL[si];
+var sky=snow?'#DDE6EE':P.sky,g=snow?'#F2F5F8':P.g;
+var v='<svg viewBox="0 0 354 180" preserveAspectRatio="xMidYMid slice" role="img" aria-label="'+reg.n+'の'+SEA[si]+'の森">';
+v+='<rect width="354" height="180" fill="'+sky+'"/><rect y="120" width="354" height="60" fill="'+g+'"/>';
+var xs=[30,95,170,245,315];
+for(var i=0;i<xs.length;i++){
+var x=xs[i],th=70+((i*37)%25),top=120-th;
+v+='<rect x="'+(x-6)+'" y="'+top+'" width="12" height="'+th+'" fill="#5A4636"/>';
+if(snow){
+v+='<path d="M'+x+' '+top+' l-22 -26 M'+x+' '+(top+14)+' l20 -22" stroke="#5A4636" stroke-width="3" fill="none"/>';
+v+='<ellipse cx="'+x+'" cy="'+(top-2)+'" rx="9" ry="3" fill="#fff"/>';
+}else{
+v+='<circle cx="'+x+'" cy="'+(top-8)+'" r="30" fill="'+P.l1+'"/><circle cx="'+(x+14)+'" cy="'+top+'" r="22" fill="'+P.l2+'"/>';
+}}
+if(si===2){for(var j=0;j<20;j++){v+='<circle cx="'+((j*53)%340+8)+'" cy="'+(128+((j*29)%46))+'" r="3" fill="'+(j%2?'#C9622B':'#E0A030')+'"/>';}}
+if(snow){v+='<ellipse cx="70" cy="140" rx="46" ry="9" fill="#fff"/><ellipse cx="200" cy="158" rx="60" ry="10" fill="#fff"/><ellipse cx="310" cy="136" rx="40" ry="8" fill="#fff"/>';}
+var ov=[['#000',0],['#E67E22',.22],['#0B1B3A',.36],['#6B4A7A',.28]][t];
+if(ov[1])v+='<rect width="354" height="180" fill="'+ov[0]+'" opacity="'+ov[1]+'"/>';
+return v+'</svg>';}
+
+/* ---------- 描画 ---------- */
+function insName(i){var p=SPID[i.sp];return p.n+'('+i.stage+(i.stage==='成虫'?' '+i.sex+' '+i.size+'mm'+(i.defect?' 羽化不全':''):'')+')';}
+function selIns(){
+for(var i=0;i<s.insects.length;i++){if(s.insects[i].id===s.sel)return s.insects[i];}
+if(s.insects.length){s.sel=s.insects[0].id;return s.insects[0];}
+return null;}
+function setBar(id,val,warn){
+$('b-'+id).style.width=val+'%';
+$('b-'+id).className=val<warn?'low':'';
+$('v-'+id).textContent=val+'%';}
+function renderHome(){
+renderMeters();
+$('pts').textContent=fmt(s.pts)+' pt';
+$('day').textContent='飼育 '+s.day+'日目';
+var reg=RID[s.loc];
+$('seasonlabel').textContent=reg.n+'・'+SEA[seasonIdx(reg,s.month)]+'('+s.month+'月)';
+var ins=selIns();
+$('selname').textContent=ins?insName(ins):'個体なし';
+$('day').textContent='飼育 '+s.day+'日目'+(ins?' / 状態:'+status(ins)+(ins.stage==='蛹'?'(触らない)':''):'');
+var larva=ins&&ins.stage==='幼虫',adult=ins&&ins.stage==='成虫',pupa=ins&&ins.stage==='蛹';
+$('g-pupa').style.display=pupa?'':'none';
+var isBeetle=ins&&/カブト/.test(SPID[ins.sp].n)||(ins&&ins.sp==='yanbaru');
+$('g-larva').style.display=larva?'':'none';
+$('g-beetle').style.display=(adult&&isBeetle)?'':'none';
+$('g-stag').style.display=(adult&&!isBeetle)?'':'none';
+var h='';
+for(var i=0;i<s.insects.length;i++){var it=s.insects[i];
+h+='<button type="button" class="case" data-sel="'+it.id+'" aria-pressed="'+(ins&&it.id===ins.id)+'">'+SPID[it.sp].n+' '+it.stage+(it.laying?'・産卵中':(it.mated?'・交尾済':''))+(status(it)!=='順調'?'・'+status(it):'')+'</button>';}
+if(!s.insects.length)h+='<span class="cap">個体がいません。採集に出かけましょう。</span>';
+h+='<span class="cap">ケース '+s.insects.length+'/'+s.cases+'</span>';
+$('cases').innerHTML=h;
+$('inv').textContent='所持: マット '+s.inv.mat+'袋 / ゼリー '+s.inv.jelly+'個 / 産卵セット '+s.inv.set+'個';
+var up=unmatedFemale();
+$('a-pair').disabled=!up;
+$('a-lay').disabled=!(ins&&adult&&ins.sex==='♀'&&ins.mated&&!ins.laying&&s.inv.set>=1);
+var bn='';
+if(ins&&adult&&ins.sex==='♀'&&ins.laying)bn='産卵セットに入っています。季節を進めると産卵し、親は寿命を迎えます。';
+else if(ins&&adult&&ins.sex==='♀'&&ins.mated)bn=(ins.hurt?'傷ついた雌のため産卵数は半分です。':'')+(s.inv.set<1?'産卵セットが必要です(ショップ、600円)。':'「産卵セットを組む」で産卵の準備ができます。');
+else if(up)bn='同種の雌雄がいます。ペアにできます。';
+else bn='繁殖には、同種の成虫の雌雄を同じ場所で育てる必要があります。';
+$('breednote').textContent=bn;}
+function renderMeters(){
+var i=selIns(),t=tempNow();
+var f=i?Math.round(i.food):0,w=i?Math.round(i.wet):0,fr=i?Math.round(i.fresh):0;
+var ad=i&&i.stage==='成虫';
+$('l-food').textContent=ad?'ゼリー残量':'満腹度';
+$('l-wet').textContent=ad?'湿り':'マットの湿り';
+$('l-fresh').textContent=ad?'ケースの清潔':'マットの鮮度';
+setBar('food',f,30);setBar('wet',w,30);setBar('fresh',fr,ad?20:30);
+$('v-temp').textContent=t+'℃';
+$('b-temp').style.width=Math.max(5,Math.min(100,Math.round((t+5)/40*100)))+'%';
 }
-function render(){
-setBar('food',s.food,30);setBar('wet',s.wet,30);setBar('fresh',s.fresh,40);
-document.getElementById('pts').textContent=s.pts.toLocaleString('ja-JP')+' pt';
-document.getElementById('day').textContent='飼育 '+s.day+'日目';
-}
+function renderGather(){
+var reg=RID[dest],e=env(dest),mo=moon();
+$('forest').innerHTML=forestSVG(reg,e.si,method==='trap'?2:tod);
+$('sitrep').innerHTML='<b>'+reg.n+'・'+SEA[e.si]+'('+s.month+'月)</b><br>天気 '+e.weather+' / 気温 '+e.temp+'℃<br>月齢 '+mo.age.toFixed(1)+'(明るさ '+Math.round(mo.bright*100)+'%)';
+var t='';
+REG.forEach(function(r){
+var c=travelCost(s.loc,r.id),se=seasonIdx(r,s.month);
+t+='<button type="button" class="tile" style="grid-area:'+r.id+'" data-dest="'+r.id+'" aria-pressed="'+(r.id===dest)+'">'+r.n+'<small>'+SEA[se]+' / '+(c?fmt(c)+'円':'無料')+'</small></button>';});
+$('tilemap').innerHTML=t;
+var ls='';REG.forEach(function(r){ls+='<option value="'+r.id+'"'+(r.id===s.loc?' selected':'')+'>'+r.n+'</option>';});
+$('locsel').innerHTML=ls;
+var m='';MORDER.forEach(function(k){var M=METH[k];
+m+='<button type="button" data-m="'+k+'" aria-pressed="'+(k===method)+'">'+M.n+'<small>'+(M.cost?fmt(M.cost)+'円':'無料')+'</small></button>';});
+$('methods').innerHTML=m;
+var td='';TIMES.forEach(function(n,i){td+='<button type="button" data-t="'+i+'" aria-pressed="'+(i===tod&&method!=='trap')+'"'+(method==='trap'?' disabled':'')+'>'+n+'</button>';});
+$('tods').innerHTML=td;
+$('todnote').textContent=METH[method].note;
+var cost=travelCost(s.loc,dest)+METH[method].cost;
+var free=s.cases-s.insects.length;
+$('plan').textContent='費用 '+fmt(cost)+'円(所持 '+fmt(s.pts)+')/ ケースの空き '+free+'。出発すると1日が経ちます。';
+$('go-gather').disabled=false;
+var d='';
+SP.forEach(function(p){
+if(p.r.indexOf(dest)<0)return;
+var x=s.dex[p.id]||{},st;
+if(p.prot)st=x.seen?'見かけた(保護種・捕獲不可)':'未発見(保護種・捕獲不可)';
+else st=x.caught?'捕獲 '+x.caught:'未発見';
+d+='<li><span>'+(x.seen||x.caught?p.n:'？？？')+'</span><span>'+st+'</span></li>';});
+$('dex').innerHTML=d;}
+/* ---------- 委託販売 ---------- */
+var BASE={kabuto:500,nokogiri:600,miyama:900,kokuwa:300,hirata:1200,suji:400,akaashi:1000,okihirata:1500,okikabuto:900,okinokogiri:1000};
+var MKA=[1,.75,1,1.4],MKL=[1,1,1.1,1.1],SLOTS=4,FEE=.1,UPKEEP=100;
+var lastSell=0,priceFor=0;
+function mktSeason(){return seasonIdx(RID[s.loc],s.month);}
+function fairValue(i,cond){
+var sp=SPID[i.sp],b=BASE[i.sp]||300,si=mktSeason(),v;
+if(i.stage==='成虫'){var mean=i.sex==='♂'?sp.m:sp.f;var sz=Math.max(.5,Math.min(2.5,Math.pow(i.size/mean,2)));v=b*sz*(i.sex==='♂'?1:.55)*MKA[si];}
+else{v=b*.45*Math.max(.4,Math.min(2,i.w/12))*MKL[si];}
+if(i.defect)v*=.5;
+var n=(mulberry32(SP.indexOf(sp)*131+s.month*17)()-.5)*.3;
+var cf=.4+.6*Math.max(0,Math.min(100,cond))/100;
+return Math.max(10,Math.round(v*cf*(1+n)/10)*10);}
+function band(i,cond){
+var f=fairValue(i,cond),off=(mulberry32(i.id*7919)()-.5)*.2;
+return[Math.max(10,Math.round(f*(.75+off)/10)*10),Math.max(20,Math.round(f*(1.3+off)/10)*10)];}
+function addLog(t){s.log.unshift(t);if(s.log.length>10)s.log.length=10;}
+function sellable(){return s.insects.filter(function(i){return!SPID[i.sp].prot;});}
+function renderShop(){
+var si=mktSeason();
+var tr=si===1?'夏は成虫の供給が多く、相場は安めです。':(si===3?'冬は成虫が希少で、相場は高めです。':'成虫・幼虫とも標準的な相場です。');
+$('mkt-note').textContent=RID[s.loc].n+'・'+SEA[si]+'。'+tr+'売れるかどうかは、季節を進めたときに決まります。';
+var list=sellable(),h='';
+list.forEach(function(i){h+='<option value="'+i.id+'">'+insName(i)+'</option>';});
+if(!list.length)h='<option value="">出品できる個体がいません</option>';
+var cur=$('sell-ins');cur.innerHTML=h;
+var chosen=list.filter(function(i){return i.id===lastSell;})[0]||list[0];
+if(chosen){cur.value=String(chosen.id);}
+var full=s.listings.length>=SLOTS;
+if(chosen){
+var b=band(chosen,100);
+$('sell-info').innerHTML='目安の価格帯 <b>'+fmt(b[0])+'〜'+fmt(b[1])+'円</b><br><span class="note">状態が落ちると値打ちも下がります。</span>';
+lastSell=chosen.id;
+if(priceFor!==chosen.id){$('sell-price').value=Math.round((b[0]+b[1])/2/10)*10;priceFor=chosen.id;}
+}else{$('sell-info').textContent='採集に出かけて個体を集めましょう。';}
+$('sell-go').disabled=!chosen||full;
+$('slot-h').textContent='出品中('+s.listings.length+'/'+SLOTS+'枠)';
+var l='';
+s.listings.forEach(function(L){
+l+='<li><span>'+insName(L.ins)+'<small>希望 '+fmt(L.price)+'円 / 状態 '+L.cond+'% / '+L.age+'季節経過</small></span><button type="button" class="small-btn" data-wd="'+L.lid+'">取り下げ</button></li>';});
+$('listings').innerHTML=l||'<li><span>出品はありません</span><span></span></li>';
+var g='';s.log.forEach(function(t){g+='<li><span>'+t+'</span><span></span></li>';});
+$('log').innerHTML=g||'<li><span>まだ記録はありません</span><span></span></li>';
+var dl='';
+s.dead.forEach(function(d,k){
+var i=d.ins,ok=specOK(d);
+dl+='<li><span>'+insName(i)+'<small>'+d.cause+'で死亡'+(ok?'':(i.stage!=='成虫'?'(成虫ではないため標本にできません)':(i.defect?'(羽化不全のため標本にできません)':'(世話不足のため標本にできません)')))+'</small></span>'+(ok?'<button type="button" class="small-btn" data-spec="'+k+'">標本を依頼</button>':'<span></span>')+'</li>';});
+$('deadlist').innerHTML=dl||'<li><span>いません</span><span></span></li>';
+var sl='';
+s.pending.forEach(function(p){sl+='<li><span>'+specLabel(p)+'<small>依頼中(次の季節に完成)</small></span><span></span></li>';});
+s.spec.forEach(function(p){sl+='<li><span>'+specLabel(p)+'<small>完成</small></span><span></span></li>';});
+$('speclist').innerHTML=sl||'<li><span>まだありません</span><span></span></li>';
+var it='';
+[['mat','マット(1袋)','幼虫のエサ兼寝床。エサやり1、交換2袋を使う',PRICE.mat],['jelly','昆虫ゼリー(1個)','成虫のエサ。エサやりで1個使う',PRICE.jelly],['set','産卵セット(1個)','交尾済みの雌を産卵させる',PRICE.set]].forEach(function(x){
+it+='<li><span>'+x[1]+'<small>'+x[2]+' / 所持 '+s.inv[x[0]]+'</small></span><button type="button" class="small-btn" data-buy="'+x[0]+'">'+fmt(x[3])+'円</button></li>';});
+it+='<li><span>飼育ケース追加<small>現在 '+s.cases+'個(最大'+MAXCASE+')/ 維持費 '+CASEFEE+'円×個数</small></span>'+(s.cases>=MAXCASE?'<span></span>':'<button type="button" class="small-btn" data-buy="case">'+fmt(casePrice())+'円</button>')+'</li>';
+$('items').innerHTML=it;}
+function shopMsg(t){$('sell-msg').textContent=t;}
+function sellGo(){
+var id=parseInt($('sell-ins').value,10),ins=null,k;
+for(k=0;k<s.insects.length;k++){if(s.insects[k].id===id)ins=s.insects[k];}
+if(!ins){shopMsg('個体を選んでください。');return;}
+if(SPID[ins.sp].prot){shopMsg('保護種は売れません。');return;}
+if(s.listings.length>=SLOTS){shopMsg('出品枠がいっぱいです。');return;}
+var price=parseInt($('sell-price').value,10);
+if(!(price>=10)){shopMsg('価格は10円以上で入力してください。');return;}
+s.insects=s.insects.filter(function(i){return i.id!==id;});
+s.listings.push({lid:s.lid++,ins:ins,price:price,cond:100,age:0});
+lastSell=0;priceFor=0;if(s.sel===id)s.sel=s.insects.length?s.insects[0].id:0;
+addLog(SPID[ins.sp].n+'を'+fmt(price)+'円で委託に出した');
+save();renderAll();shopMsg('委託に出しました。売れるかどうかは、季節を進めたときに決まります。');}
+function withdraw(lid){
+var L=null;s.listings.forEach(function(x){if(x.lid===lid)L=x;});
+if(!L)return;
+if(s.insects.length>=s.cases){shopMsg('ケースに空きがないので、取り下げられません。');return;}
+s.insects.push(L.ins);
+s.listings=s.listings.filter(function(x){return x.lid!==lid;});
+addLog(SPID[L.ins.sp].n+'を取り下げた');
+if(!s.sel)s.sel=L.ins.id;
+save();renderAll();shopMsg('取り下げて、ケースに戻しました。');}
+function settleMarket(){
+var res={sold:0,gain:0,fee:0,kept:0},next=[];
+s.listings.forEach(function(L){
+var fair=fairValue(L.ins,L.cond),ratio=L.price/fair;
+var p=Math.max(.02,Math.min(.95,1.35-.75*ratio));
+if(Math.random()<p){
+var net=Math.round(L.price*(1-FEE));
+s.pts+=net;res.sold++;res.gain+=net;
+addLog(SPID[L.ins.sp].n+'が売れた(+'+fmt(net)+'円・手数料込み)');
+}else{
+L.age+=1;L.cond=Math.max(0,L.cond-20);
+var c=Math.min(UPKEEP,s.pts);s.pts-=c;res.fee+=c;res.kept++;
+addLog(SPID[L.ins.sp].n+'は売れ残り(維持費 '+fmt(c)+'円、状態 '+L.cond+'%)');
+next.push(L);}});
+s.listings=next;return res;}
+function renderAll(){renderHome();renderGather();renderShop();}
 var tt;
-function say(m){var t=document.getElementById('toast');t.textContent=m;clearTimeout(tt);tt=setTimeout(function(){t.textContent='';},2200);}
-document.getElementById('a-feed').onclick=function(){
-if(s.food>=100){say('もうお腹いっぱいです');return;}
-s.food=clamp(s.food+20);s.fresh=clamp(s.fresh-5);render();save();say('エサをあげた(マットが少し汚れた)');};
-document.getElementById('a-mist').onclick=function(){
-if(s.wet>=100){say('これ以上湿らせると過湿です');return;}
-s.wet=clamp(s.wet+15);render();save();say('霧吹きをした');};
-document.getElementById('a-mat').onclick=function(){
-s.fresh=100;s.wet=50;render();save();say('マットを交換した');};
+function say(m){var el=$('toast');el.textContent=m;clearTimeout(tt);tt=setTimeout(function(){el.textContent='';},2400);}
+function showResult(lines,restore){
+var el=$('result');
+var h='<b>結果</b><ul>'+lines.map(function(l){return'<li>'+l+'</li>';}).join('')+'</ul>';
+if(restore)h+='<button type="button" class="small-btn" id="restore" style="margin-top:8px">朽ち木を元に戻す</button>';
+el.innerHTML=h;el.className='result show';
+var rb=$('restore');
+if(rb)rb.onclick=function(){pendingRestore=false;rb.outerHTML='<span class="note">朽ち木を元に戻しました。</span>';};}
+
+/* ---------- 採集 ---------- */
+function mk(sp,stage){
+var sex=stage==='成虫'?(Math.random()<.5?'♂':'♀'):'?';
+var size=0,w=0;
+if(stage==='成虫'){var mean=sex==='♂'?sp.m:sp.f;size=Math.max(10,Math.round(mean+gauss()*sp.sd));}
+else w=Math.round(4+Math.random()*14);
+return{sp:sp,stage:stage,sex:sex,size:size,w:w};}
+function doGather(){
+if(pendingRestore){showResult(['前回割った朽ち木を、まだ元に戻していません。']);return;}
+var free=s.cases-s.insects.length;
+if(free<=0){showResult(['飼育ケースがいっぱいです。持ち帰れないので出発できません。']);return;}
+var cost=travelCost(s.loc,dest)+METH[method].cost;
+if(s.pts<cost){showResult(['費用が足りません(必要 '+fmt(cost)+'円)。']);return;}
+var e=env(dest),mo=moon();
+s.pts-=cost;s.day+=1;
+var found=[],seen=[];
+SP.forEach(function(sp){
+if(sp.r.indexOf(dest)<0)return;
+var p=chance(sp,e,mo);
+if(sp.prot){if(Math.random()<p*.4)seen.push(sp);return;}
+if(Math.random()<p)found.push(mk(sp,'成虫'));
+if(method==='rot'&&(e.si===0||e.si===3)){
+var pl=Math.min(.8,sp.base*.9*(sp.aff.rot||.5)*((e.weather==='雨'||e.weather==='雪')?.6:1));
+if(Math.random()<pl)found.push(mk(sp,'幼虫'));}});
+found.sort(function(){return Math.random()-.5;});
+var take=found.slice(0,free),left=found.length-take.length,lines=[];
+take.forEach(function(f){
+var ins={id:s.nid++,sp:f.sp.id,stage:f.stage,sex:f.sex,size:f.size,w:f.w,food:70,wet:60,fresh:80,g:f.stage==='幼虫'?1:0,age:0,touched:false,defect:false,place:RID[dest].n,cm:s.month,gene:1,cbf:0,mated:false,laying:false,hurt:false};
+s.insects.push(ins);
+var d=s.dex[f.sp.id]||(s.dex[f.sp.id]={seen:0,caught:0});
+d.seen=1;d.caught=(d.caught||0)+1;
+lines.push(insName(ins)+(f.stage==='幼虫'?' '+f.w+'g':'')+' をケースへ');});
+seen.forEach(function(sp){
+var d=s.dex[sp.id]||(s.dex[sp.id]={seen:0,caught:0});d.seen=1;
+lines.push(sp.n+'を見かけた(保護種のため捕獲できない)。図鑑に記録しました。');});
+if(left>0)lines.push('ケースが足りず、'+left+'匹はその場で見送りました。');
+if(!take.length&&!seen.length)lines.push('今回は何も採れませんでした。');
+lines.push('費用 '+fmt(cost)+'円');
+if(!s.sel||!selIns())s.sel=s.insects.length?s.insects[0].id:0;
+if(method==='rot')pendingRestore=true;
+save();renderAll();showResult(lines,method==='rot');}
+
+/* ---------- 世話・成長・死亡・標本 ---------- */
+var NEED={kabuto:3,nokogiri:3,miyama:3,kokuwa:3,hirata:4,suji:2,akaashi:3,okihirata:3,okikabuto:3,okinokogiri:3};
+var LIFE={kabuto:1,nokogiri:1,miyama:1,akaashi:1,suji:2,kokuwa:4,hirata:4,okihirata:4,okikabuto:1,okinokogiri:1};
+var CASEFEE=150,SPECFEE=400;
+var PRICE={mat:80,jelly:40,set:600},MAXCASE=6;
+var EGG={kabuto:15,nokogiri:18,miyama:12,kokuwa:25,hirata:20,suji:25,akaashi:15,okihirata:20,okikabuto:15,okinokogiri:15};
+function casePrice(){return 1500*(s.cases-1);}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function isStag(i){return !(/カブト/.test(SPID[i.sp].n)||i.sp==='yanbaru');}
+function unmatedFemale(){
+for(var a=0;a<s.insects.length;a++){var f=s.insects[a];
+if(f.stage!=='成虫'||f.sex!=='♀'||f.mated)continue;
+for(var b=0;b<s.insects.length;b++){var m=s.insects[b];
+if(m.stage==='成虫'&&m.sex==='♂'&&m.sp===f.sp)return{f:f,m:m};}}
+return null;}
+function pair(){
+var p=unmatedFemale();
+if(!p){say('ペアにできる雌雄がいません');return;}
+var f=p.f,m=p.m,sp=SPID[f.sp];
+f.mated=true;f.mateRel=m.size/sp.m;
+var risk=isStag(f)?.2:.05;
+if(Math.random()<risk){f.hurt=true;say(SPID[f.sp].n+'のペアリング。雌が傷ついた(産卵数が減る)');}
+else say(SPID[f.sp].n+'のペアリングに成功した');
+save();renderHome();}
+function laySet(){
+var i=selIns();
+if(!i||i.stage!=='成虫'||i.sex!=='♀'||!i.mated||i.laying){say('交尾済みの雌を選んでください');return;}
+if(s.inv.set<1){say('産卵セットがありません(ショップで購入)');return;}
+s.inv.set-=1;i.laying=true;
+say('産卵セットを組んだ。次の季節に産卵します');
+save();renderHome();}
+function buyMsg(t){$('buy-msg').textContent=t;}
+function buy(k){
+if(k==='case'){
+if(s.cases>=MAXCASE){buyMsg('ケースは最大 '+MAXCASE+' 個までです。');return;}
+var c=casePrice();
+if(s.pts<c){buyMsg('ポイントが足りません('+fmt(c)+'円)。');return;}
+s.pts-=c;s.cases+=1;buyMsg('ケースを1つ増やしました(維持費は季節ごとに増えます)。');}
+else{
+var pr=PRICE[k];
+if(s.pts<pr){buyMsg('ポイントが足りません('+fmt(pr)+'円)。');return;}
+s.pts-=pr;s.inv[k]+=1;buyMsg('購入しました(-'+fmt(pr)+'円)。');}
+save();renderAll();}
+function tempNow(){var reg=RID[s.loc];return reg.t[seasonIdx(reg,s.month)];}
+function bads(i){
+var n=0;
+if(i.stage==='幼虫'){if(i.food<30)n++;if(i.wet<30)n++;if(i.fresh<30)n++;}
+else if(i.stage==='蛹'){if(i.wet<30)n++;}
+else{if(i.food<30)n++;if(i.wet<30)n++;if(i.fresh<20)n++;}
+if(tempNow()>30)n++;
+return n;}
+function status(i){var n=bads(i);return n===0?'順調':(n===1?'弱った':'危険');}
+function decay(h){
+s.insects.forEach(function(i){
+i.food=Math.max(0,i.food-1.2*h);i.wet=Math.max(0,i.wet-.8*h);i.fresh=Math.max(0,i.fresh-.4*h);});}
+function tick(){
+var now=Date.now(),h=(now-s.t)/3600000;
+if(!(h>0))return;
+h=Math.min(h,72);s.t=now;
+if(h>0.001)decay(h);}
+function specOK(d){return d.ins.stage==='成虫'&&!d.ins.defect&&d.cause==='寿命'&&!SPID[d.ins.sp].prot;}
+function specLabel(p){return SPID[p.sp].n+' '+p.sex+' '+p.size+'mm / 採集地 '+p.place+' / '+p.cm+'月採集'+(p.cbf?'・累代 F'+p.cbf:'');}
+function emerge(i,defect){
+var sp=SPID[i.sp];
+i.sex=Math.random()<.5?'♂':'♀';
+var mean=i.sex==='♂'?sp.m:sp.f,f=Math.max(.7,Math.min(1.15,i.w/20));
+i.size=Math.max(10,Math.round(mean*f*(i.gene||1)+gauss()*sp.sd*.3));
+if(defect)i.size=Math.round(i.size*.85);
+i.stage='成虫';i.defect=!!defect;i.age=0;i.touched=false;
+i.food=70;i.wet=Math.max(i.wet,40);i.fresh=80;}
+function kill(i,cause,L){
+s.dead.push({ins:i,cause:cause});
+var nm=SPID[i.sp].n+'('+i.stage+')';
+L.push('【死亡】'+nm+(cause==='寿命'?'は寿命を迎えた。':'は世話が足りず、死んでしまった。'));}
+function openModal(title,lines,btns){
+$('m-title').textContent=title;
+$('m-lines').innerHTML=lines.map(function(l){return'<li>'+l+'</li>';}).join('');
+var h='';btns.forEach(function(b,k){h+='<button type="button" data-mb="'+k+'"'+(b.p?' class="p"':'')+'>'+b.t+'</button>';});
+var el=$('m-btns');el.innerHTML=h;
+var bs=el.querySelectorAll('button');
+for(var k=0;k<bs.length;k++){bs[k].onclick=(function(f){return function(){f();};})(btns[k].f);}
+$('modal').className='modal show';
+if(bs.length)bs[bs.length-1].focus();}
+function closeModal(){$('modal').className='modal';}
+function doAdvance(){
+var L=[];
+s.dead=[];
+s.pending.forEach(function(p){s.spec.push(p);L.push('標本が完成した: '+specLabel(p));});
+s.pending=[];
+s.month=nextSeasonMonth(RID[s.loc],s.month);
+var cold=tempNow()<8,out=[],clutches=[];
+s.insects.forEach(function(i){
+var st=status(i),nm=SPID[i.sp].n;
+if(st==='危険'){kill(i,'世話不足',L);return;}
+if(i.stage==='幼虫'){
+if(st==='弱った'){i.w=Math.max(3,i.w-2);L.push(nm+'(幼虫)は弱って、成長が遅れた。');}
+else if(cold){L.push(nm+'(幼虫)は低温で成長が止まった。');}
+else{i.g+=1;i.w=Math.min(40,i.w+5);L.push(nm+'(幼虫)は順調に育った('+i.w+'g)。');
+if(i.g>=(NEED[i.sp]||3)){i.stage='蛹';i.touched=false;L.push(nm+'が蛹になった。触らずに待とう。');}}
+}else if(i.stage==='蛹'){
+if(i.touched){emerge(i,true);L.push(nm+'は羽化したが、触られたために羽化不全になった。');}
+else if(st==='弱った'){var df=Math.random()<.5;emerge(i,df);L.push(nm+'が羽化した'+(df?'が、乾燥のため羽化不全になった。':'('+i.sex+' '+i.size+'mm)。'));}
+else{emerge(i,false);L.push(nm+'が羽化した('+i.sex+' '+i.size+'mm)。');}
+}else{
+i.age+=1;
+if(i.laying){
+var sp0=SPID[i.sp],rel=((i.size/sp0.f)+(i.mateRel||1))/2;
+var eg=Math.max(1,Math.round((EGG[i.sp]||15)*(st==='順調'?1:.5)*(i.hurt?.5:1)));
+clutches.push({sp:i.sp,eggs:eg,gene:clamp(1+.5*(rel-1),.85,1.15),cbf:(i.cbf||0)+1,place:i.place});
+L.push(nm+'(雌)が産卵した(卵 '+eg+'個)。親は寿命を迎えた。');
+kill(i,'寿命',L);return;}
+if(i.age>=(LIFE[i.sp]||1)){kill(i,'寿命',L);return;}
+L.push(nm+'(成虫)は'+(st==='順調'?'元気に過ごした。':'弱っている。'));}
+out.push(i);});
+s.insects=out;
+out.forEach(function(i){i.food=Math.max(0,i.food-40);i.wet=Math.max(0,i.wet-30);i.fresh=Math.max(0,i.fresh-30);});
+clutches.forEach(function(c){
+var free=s.cases-s.insects.length,n=Math.min(c.eggs,Math.max(0,free));
+for(var k=0;k<n;k++){
+s.insects.push({id:s.nid++,sp:c.sp,stage:'幼虫',sex:Math.random()<.5?'♂':'♀',size:0,w:5,food:70,wet:60,fresh:80,g:0,age:0,touched:false,defect:false,place:c.place||'不明',cm:s.month,gene:c.gene,cbf:c.cbf,mated:false,laying:false,hurt:false});}
+if(n>0)L.push(SPID[c.sp].n+'の幼虫が'+n+'匹孵化した(累代 F'+c.cbf+')。');
+if(c.eggs>n)L.push('ケースが足りず、卵 '+(c.eggs-n)+'個は孵化できなかった。');});
+var fee=Math.min(CASEFEE*s.cases,s.pts);s.pts-=fee;
+L.push('ケース維持費 '+fmt(fee)+'円');
+var r=settleMarket();
+if(r.sold)L.push('委託販売: '+r.sold+'件が売れた(+'+fmt(r.gain)+'円)');
+if(r.kept)L.push('委託販売: '+r.kept+'件が売れ残り(維持費 '+fmt(r.fee)+'円)');
+if(!selIns())s.sel=s.insects.length?s.insects[0].id:0;
+save();renderAll();
+var reg=RID[s.loc];
+if(s.dead.some(specOK))L.push('標本の依頼は、ショップで今のうちにできます。');
+openModal(reg.n+'は'+SEA[seasonIdx(reg,s.month)]+'になりました(戻せません)',L,[{t:'閉じる',p:true,f:closeModal}]);}
+function reqSpec(k){
+var d=s.dead[k];
+if(!d||!specOK(d))return;
+if(s.pts<SPECFEE){shopMsg('依頼料が足りません(400円)。');return;}
+s.pts-=SPECFEE;
+var i=d.ins;
+s.pending.push({sp:i.sp,sex:i.sex,size:i.size,place:i.place||'不明',cm:i.cm||s.month,cbf:i.cbf||0});
+s.dead.splice(k,1);
+addLog(SPID[i.sp].n+'の標本を依頼した(-'+SPECFEE+'円)');
+save();renderAll();shopMsg('標本を依頼しました。次に季節を進めたときに完成します。');}
+
+/* ---------- 操作 ---------- */
+function care(kind){
+var i=selIns();
+if(!i){say('個体がいません');return;}
+if(i.stage==='蛹'){i.touched=true;save();renderHome();say('蛹に触ってしまった…羽化不全の原因になります');return;}
+if(kind==='feed'){
+if(i.food>=100){say('もうお腹いっぱいです');return;}
+if(i.stage==='成虫'){
+if(s.inv.jelly<1){say('ゼリーがありません(ショップで購入)');return;}
+s.inv.jelly-=1;i.food=Math.min(100,i.food+25);i.fresh=Math.max(0,i.fresh-3);say('ゼリーを足した');}
+else{
+if(s.inv.mat<1){say('マットがありません(ショップで購入)');return;}
+s.inv.mat-=1;i.food=Math.min(100,i.food+20);i.fresh=Math.max(0,i.fresh-5);say('エサをあげた(マットを1袋使用)');}}
+else if(kind==='mist'){
+if(i.wet>=100){say('これ以上湿らせると過湿です');return;}
+i.wet=Math.min(100,i.wet+15);say('霧吹きをした');}
+else if(i.stage==='成虫'){i.fresh=100;say('ケースを掃除した');}
+else{
+if(s.inv.mat<2){say('マットが2袋必要です(ショップで購入)');return;}
+s.inv.mat-=2;i.fresh=100;i.wet=50;say('マットを交換した(2袋使用)');}
+save();renderHome();}
+$('a-feed').onclick=function(){care('feed');};
+$('a-mist').onclick=function(){care('mist');};
+$('a-mat').onclick=function(){care('mat');};
+$('a-pair').onclick=pair;
+$('a-lay').onclick=laySet;
+$('next-season').onclick=function(){
+var danger=s.insects.filter(function(i){return status(i)==='危険';});
+if(!danger.length){doAdvance();return;}
+openModal('危険な個体がいます',danger.map(function(i){return SPID[i.sp].n+'('+i.stage+')は危険な状態です。このまま進めると死にます。';}),[{t:'戻って世話をする',f:closeModal},{t:'それでも季節を進める',p:true,f:function(){closeModal();doAdvance();}}]);};
+$('locsel').onchange=function(){s.loc=this.value;save();renderAll();};
+$('go-gather').onclick=doGather;
+$('sell-go').onclick=sellGo;
+$('sell-ins').onchange=function(){lastSell=parseInt(this.value,10)||0;priceFor=0;renderShop();};
 function show(id){
 var all=document.querySelectorAll('.screen');
 for(var i=0;i<all.length;i++){all[i].classList.toggle('active',all[i].id===id);}
-}
-var btns=document.querySelectorAll('[data-go]');
-for(var j=0;j<btns.length;j++){btns[j].onclick=(function(b){return function(){show(b.getAttribute('data-go'));};})(btns[j]);}
-render();
+if(id==='gather'){$('result').className='result';renderGather();}
+if(id==='shop'){shopMsg('');lastSell=0;priceFor=0;renderShop();}}
+document.addEventListener('click',function(ev){
+var b=ev.target.closest?ev.target.closest('button'):null;if(!b)return;
+if(b.hasAttribute('data-go')){show(b.getAttribute('data-go'));return;}
+if(b.hasAttribute('data-buy')){buy(b.getAttribute('data-buy'));return;}
+if(b.hasAttribute('data-spec')){reqSpec(parseInt(b.getAttribute('data-spec'),10));return;}
+if(b.hasAttribute('data-wd')){withdraw(parseInt(b.getAttribute('data-wd'),10));return;}
+if(b.hasAttribute('data-sel')){s.sel=parseInt(b.getAttribute('data-sel'),10);save();renderHome();return;}
+if(b.hasAttribute('data-dest')){dest=b.getAttribute('data-dest');renderGather();return;}
+if(b.hasAttribute('data-m')){method=b.getAttribute('data-m');renderGather();return;}
+if(b.hasAttribute('data-t')){tod=parseInt(b.getAttribute('data-t'),10);renderGather();return;}
+});
+tick();save();renderAll();
+setInterval(function(){tick();save();renderHome();},60000);
 })();
 </script>
 </body>
