@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JF育成アプリ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3EFE4;--ink:#1F2A1F;--forest:#2F4A35;--amber:#D9822B;--track:#D3CDB9;--warn:#9A4A1C;--sub:#4A5A4C}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#E4DFD0;font-family:'Noto Sans JP',system-ui,sans-serif;color:var(--ink)}
+button{font-family:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.app{position:relative;width:100%;max-width:430px;height:100vh;height:100dvh;margin:0 auto;background:var(--bg);overflow:hidden}
+.screen{position:absolute;inset:0;padding:20px 18px 18px;display:flex;flex-direction:column;gap:14px;opacity:0;visibility:hidden;transition:opacity .35s ease,visibility .35s;overflow-y:auto}
+.screen.active{opacity:1;visibility:visible}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.day{font-size:12px;color:var(--sub)}
+.name{font-size:18px;font-weight:700}
+.pts{display:flex;align-items:center;gap:6px;background:var(--forest);color:var(--bg);border-radius:999px;padding:8px 14px;font-size:15px;font-weight:700;white-space:nowrap}
+.stage{position:relative;flex:0 0 auto;height:min(300px,36vh);min-height:200px;border-radius:20px;overflow:hidden;border:2px solid var(--forest);background:#DCE6D4}
+.stage svg{display:block;width:100%;height:100%}
+.larva{transform-origin:170px 200px;animation:breathe 3.2s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+@media (prefers-reduced-motion:reduce){.larva{animation:none}.screen{transition:none}}
+.meters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
+.m-head{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
+.bar{height:10px;background:var(--track);border-radius:6px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--forest);transition:width .4s ease}
+.bar>i.low{background:var(--warn)}
+.care{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.care button{min-height:48px;border:2px solid var(--forest);background:transparent;color:var(--ink);border-radius:14px;font-size:14px;font-weight:500}
+.care button:active{background:#E3DEC9}
+.toast{min-height:20px;font-size:13px;color:var(--sub);text-align:center}
+.spacer{flex-grow:1}
+.nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:end}
+.nav button{border:0;border-radius:16px;font-size:14px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:72px;background:var(--forest);color:var(--bg)}
+.nav button.go{min-height:88px;background:var(--amber);color:var(--ink);font-size:15px}
+.nav svg{width:24px;height:24px}
+.nav .go svg{width:28px;height:28px}
+.back{align-self:flex-start;min-height:44px;padding:0 16px;border:2px solid var(--forest);background:transparent;border-radius:12px;font-size:14px;color:var(--ink)}
+h2{margin:0;font-size:22px}
+.stub{border:2px dashed var(--forest);border-radius:16px;padding:18px;font-size:14px;line-height:1.7;color:var(--sub)}
+.stub b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="app">
+
+<section class="screen active" id="home" aria-label="育成画面">
+<div class="top">
+<div>
+<div class="day" id="day">飼育 1日目</div>
+<div class="name">カブトムシ(幼虫・2齢)</div>
+</div>
+<div class="pts" aria-label="所持ポイント">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 10h6"/></svg>
+<span id="pts">1,280 pt</span>
+</div>
+</div>
+
+<div class="stage">
+<svg viewBox="0 0 354 296" preserveAspectRatio="xMidYMid slice" role="img" aria-label="飼育ケースの中でマットに潜るカブトムシの幼虫">
+<rect width="354" height="296" fill="#DCE6D4"/>
+<rect y="110" width="354" height="186" fill="#5A3E2B"/>
+<rect y="110" width="354" height="10" fill="#6E4D37"/>
+<circle cx="40" cy="160" r="3" fill="#7A5740"/><circle cx="90" cy="220" r="4" fill="#4A3223"/>
+<circle cx="300" cy="170" r="3" fill="#7A5740"/><circle cx="260" cy="250" r="4" fill="#4A3223"/>
+<circle cx="150" cy="270" r="3" fill="#7A5740"/>
+<rect x="40" y="70" width="90" height="26" rx="4" fill="#8A6A3F"/>
+<rect x="46" y="76" width="78" height="8" rx="2" fill="#A98657"/>
+<g class="larva">
+<path d="M120 200 C120 160 180 150 215 175 C250 200 235 245 195 245 C165 245 160 220 180 212" fill="none" stroke="#F1E3C2" stroke-width="30" stroke-linecap="round"/>
+<circle cx="125" cy="205" r="17" fill="#C8782B"/><circle cx="119" cy="201" r="2.5" fill="#1F2A1F"/>
+<path d="M150 185 C165 168 190 165 205 172" fill="none" stroke="#E2D2AB" stroke-width="3" stroke-linecap="round"/>
+<path d="M205 232 C220 226 232 214 234 200" fill="none" stroke="#E2D2AB" stroke-width="3" stroke-linecap="round"/>
+</g>
+</svg>
+</div>
+
+<div class="meters">
+<div><div class="m-head"><span>満腹度</span><b id="v-food"></b></div><div class="bar"><i id="b-food"></i></div></div>
+<div><div class="m-head"><span>マットの湿り</span><b id="v-wet"></b></div><div class="bar"><i id="b-wet"></i></div></div>
+<div><div class="m-head"><span>温度</span><b id="v-temp">23℃</b></div><div class="bar"><i style="width:60%"></i></div></div>
+<div><div class="m-head"><span>マットの鮮度</span><b id="v-fresh"></b></div><div class="bar"><i id="b-fresh"></i></div></div>
+</div>
+
+<div class="care">
+<button type="button" id="a-feed">エサをやる</button>
+<button type="button" id="a-mat">マット交換</button>
+<button type="button" id="a-mist">霧吹き</button>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<div class="spacer"></div>
+
+<nav class="nav" aria-label="メインメニュー">
+<button type="button" data-go="shop">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h16l-1.5 11h-13z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
+<span>ショップ</span>
+</button>
+<button type="button" class="go" data-go="gather">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l5 7h-3l4 6H6l4-6H7z"/><path d="M12 16v5"/></svg>
+<span>採集に出かける</span>
+</button>
+<button type="button" data-go="rank">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/><path d="M12 14v4M8 20h8"/></svg>
+<span>ランキング</span>
+</button>
+</nav>
+</section>
+
+<section class="screen" id="shop" aria-label="ショップ画面">
+<button type="button" class="back" data-go="home">← 育成画面へ</button>
+<h2>ショップ</h2>
+<div class="stub"><b>未設計</b><br>飼育用品(マット、ゼリー、止まり木、霧吹き、飼育ケース)の購入と、疑似委託販売をここに置く予定です。</div>
+</section>
+
+<section class="screen" id="gather" aria-label="採集画面">
+<button type="button" class="back" data-go="home">← 育成画面へ</button>
+<h2>採集に出かける</h2>
+<div class="stub"><b>未設計</b><br>場所・時間帯・季節で出現が変わる採集をここに置く予定です。</div>
+</section>
+
+<section class="screen" id="rank" aria-label="ランキング画面">
+<button type="button" class="back" data-go="home">← 育成画面へ</button>
+<h2>ランキング</h2>
+<div class="stub"><b>未設計</b><br>何を競うか(図鑑達成数、羽化数、個体サイズ等)が未決定です。</div>
+</section>
+
+</div>
+
+<script>
+(function(){
+var KEY='jf-ikusei-v0';
+var s={food:72,wet:55,fresh:38,pts:1280,day:1};
+try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);if(o&&typeof o.food==='number')s=o;}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
+function clamp(v){return Math.max(0,Math.min(100,v));}
+function setBar(id,val,warnBelow){
+document.getElementById('b-'+id).style.width=val+'%';
+document.getElementById('b-'+id).className=val<warnBelow?'low':'';
+document.getElementById('v-'+id).textContent=val+'%';
+}
+function render(){
+setBar('food',s.food,30);setBar('wet',s.wet,30);setBar('fresh',s.fresh,40);
+document.getElementById('pts').textContent=s.pts.toLocaleString('ja-JP')+' pt';
+document.getElementById('day').textContent='飼育 '+s.day+'日目';
+}
+var tt;
+function say(m){var t=document.getElementById('toast');t.textContent=m;clearTimeout(tt);tt=setTimeout(function(){t.textContent='';},2200);}
+document.getElementById('a-feed').onclick=function(){
+if(s.food>=100){say('もうお腹いっぱいです');return;}
+s.food=clamp(s.food+20);s.fresh=clamp(s.fresh-5);render();save();say('エサをあげた(マットが少し汚れた)');};
+document.getElementById('a-mist').onclick=function(){
+if(s.wet>=100){say('これ以上湿らせると過湿です');return;}
+s.wet=clamp(s.wet+15);render();save();say('霧吹きをした');};
+document.getElementById('a-mat').onclick=function(){
+s.fresh=100;s.wet=50;render();save();say('マットを交換した');};
+function show(id){
+var all=document.querySelectorAll('.screen');
+for(var i=0;i<all.length;i++){all[i].classList.toggle('active',all[i].id===id);}
+}
+var btns=document.querySelectorAll('[data-go]');
+for(var j=0;j<btns.length;j++){btns[j].onclick=(function(b){return function(){show(b.getAttribute('data-go'));};})(btns[j]);}
+render();
+})();
+</script>
+</body>
+</html>
