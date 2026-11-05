@@ -73,6 +73,8 @@ function runOne(stratKey, seed, startMonth, h) {
   const S = () => E('s');
   const F = { fairValue: E('fairValue'), chance: E('chance'), present: E('present'), env: E('env'), travelCost: E('travelCost'), SPID: E('SPID'), NEED: E('NEED') };
   const HAS_CAND = E('typeof takeCand') === 'function';
+  const SLOTS = () => E('typeof slots') === 'function' ? E('slots()') : 4;
+  const firstX = d => (E('typeof firstVisit') === 'function' && E('firstVisit')(d)) ? E('FIRSTX') : 1;
   const m = { gives: 0, min: S().pts, travel: 0, method: 0, care: 0, shop: 0, caseFee: 0, listFee: 0, sales: 0, sold: 0, oku: 0, okuSales: 0, deaths: 0, neglectDeaths: 0, defect: 0, emerged: 0, gathers: 0, bySp: {}, curve: [] };
   const fair = (i) => F.fairValue(i, 100);
   const evCache = {};
@@ -111,6 +113,7 @@ function runOne(stratKey, seed, startMonth, h) {
               }
             }
             const cost = (st.travel === 'hack' ? 0 : F.travelCost(s.loc, d)) + METH[meth].cost;
+            v *= firstX(d);
             const score = v * 0.5 - cost; // 半分しか売れない想定で割り引く
             if (!best || score > best.score) best = { d, ter, meth, t, score, cost };
           }
@@ -130,8 +133,6 @@ function runOne(stratKey, seed, startMonth, h) {
 
   function gatherPhase() {
     if (!st.gathers) return;
-    const plan = planGather();
-    if (!plan) return;
     const home = S().loc;
     for (let g = 0; g < st.gathers; g++) {
       let s = S();
@@ -143,6 +144,8 @@ function runOne(stratKey, seed, startMonth, h) {
       }
       if (s.cases - s.insects.length <= 0) break;
       if (HAS_CAND && s.gm >= E('GMAX')) break;
+      const plan = planGather();
+      if (!plan) break;
       E(`dest='${plan.d}';terr='${plan.ter}';method='${plan.meth}';tod=${plan.t};pendingRestore=false;`);
       if (st.travel === 'hack') E(`s.loc='${plan.d}'`);
       const cost = E('travelCost(s.loc,dest)+METH[method].cost');
@@ -209,7 +212,7 @@ function runOne(stratKey, seed, startMonth, h) {
     const cands = s.insects.filter(i => !F.SPID[i.sp].prot && !keep.has(i.id) && i.stage !== '蛹')
       .map(i => ({ i, v: fair(i) })).sort((a, b) => b.v - a.v);
     for (const c of cands) {
-      if (S().listings.length >= 4) break;
+      if (S().listings.length >= SLOTS()) break;
       if (st.neglect && c.v < st.neglect) continue; // 安い個体は出品せず、死なせる
       els['sell-ins'].value = String(c.i.id);
       els['sell-price'].value = String(Math.max(10, Math.round(c.v * st.ratio / 10) * 10));
@@ -310,7 +313,8 @@ function speciesTable() {
     // 関東: 冬(12-2)は成長停止(気温5℃<8℃) → 実月数は need×12/9 程度。羽化待ちは平均2か月と置く
     const months = Math.ceil(need * 12 / 9) + 2;
     const fee = CS[z].f;
-    const matPerMonth = 1300 / 10 / 2; // 1日1回プレイで 2か月に1L
+    const matL = E('typeof MATL') === 'number' ? E('MATL') : 10;
+    const matPerMonth = 1300 / matL / 2; // 1日1回プレイで 2か月に1L
     const raiseProfit = adult - larva5 - months * (fee + matPerMonth);
     rows.push({
       種: sp.n, ケース: z, 卵数: EGG[sp.id], 成長月: need, 実月数: months, 寿命: LIFE[sp.id],

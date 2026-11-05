@@ -120,6 +120,68 @@ input.num:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 @keyframes fxcoin{from{transform:translateY(0) rotateY(0);opacity:1}to{transform:translateY(520px) rotateY(720deg);opacity:.9}}
 @keyframes fxbell{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
 @media (prefers-reduced-motion:reduce){.fx *{animation-duration:.01s!important;animation-iteration-count:1!important}}
+/* ---- v0.4 アニメーション ---- */
+.screen{transform:translateX(26px);transition:opacity .35s ease,visibility .35s,transform .35s cubic-bezier(.2,.8,.2,1)}
+.screen.active{transform:none}
+button{transition:transform .08s ease}
+button:not(:disabled):active{transform:scale(.96)}
+.tile{position:relative}
+.newmark{position:absolute;top:-7px;right:-5px;font-style:normal;font-size:10px;font-weight:700;background:var(--amber);color:#fff;border-radius:8px;padding:1px 5px;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.18)}}
+.larva{animation:wiggle 3.2s ease-in-out infinite}
+@keyframes wiggle{0%,100%{transform:scale(1) rotate(0)}30%{transform:scale(1.03) rotate(-1.5deg)}60%{transform:scale(.99) rotate(1.2deg)}}
+#g-beetle,#g-stag{transform-box:fill-box;transform-origin:center;animation:walk 7s ease-in-out infinite}
+@keyframes walk{0%,100%{transform:translateX(0)}20%{transform:translateX(-22px) rotate(-2deg)}45%{transform:translateX(-4px)}70%{transform:translateX(18px) rotate(2deg)}}
+.legs{transform-box:fill-box;transform-origin:top;animation:legs .35s ease-in-out infinite alternate}
+@keyframes legs{to{transform:scaleY(.82) translateY(1px)}}
+#g-pupa{transform-box:fill-box;transform-origin:50% 90%;animation:twitch 5s ease-in-out infinite}
+@keyframes twitch{0%,84%,100%{transform:rotate(0)}88%{transform:rotate(-4deg)}92%{transform:rotate(4deg)}96%{transform:rotate(-2deg)}}
+.stagefx{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.drop{position:absolute;top:-12px;width:7px;height:11px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#7EC8E3;animation:drop .9s ease-in both}
+@keyframes drop{to{transform:translateY(300px);opacity:.15}}
+.crumb{position:absolute;top:-12px;width:9px;height:9px;border-radius:3px;background:#6E4D37;animation:crumb 1s ease-in both}
+@keyframes crumb{to{transform:translateY(280px) rotate(260deg)}}
+.heart{position:absolute;bottom:35%;font-size:22px;line-height:1;color:#E8B84A;animation:rise 1.2s ease-out both}
+@keyframes rise{from{transform:translateY(0) scale(.5);opacity:1}to{transform:translateY(-100px) scale(1.25);opacity:0}}
+.sweep{position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.75) 50%,transparent 70%);animation:sweep .8s ease-out both}
+@keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.stage.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+.hop{animation:hop .5s ease-out}
+@keyframes hop{40%{transform:translateY(-14px)}}
+.pts{transition:background .3s}
+.pts.up{animation:ptsup .7s}
+.pts.down{animation:ptsdown .7s}
+@keyframes ptsup{30%{transform:scale(1.14);background:#3E8C4A}}
+@keyframes ptsdown{30%{transform:scale(.92);background:var(--warn)}}
+.cal{position:relative;width:150px;height:160px;border-radius:18px;background:var(--bg);color:var(--ink);box-shadow:0 10px 28px rgba(0,0,0,.4);perspective:700px;animation:fxpop .45s both}
+.cal .ring{height:34px;border-radius:18px 18px 0 0;background:var(--warn);display:flex;gap:30px;justify-content:center;align-items:center}
+.cal .ring i{width:10px;height:10px;border-radius:50%;background:var(--bg)}
+.cal .pg{position:absolute;left:0;right:0;top:34px;bottom:0;display:flex;align-items:center;justify-content:center;font-size:60px;font-weight:900;background:var(--bg);border-radius:0 0 18px 18px;backface-visibility:hidden}
+.cal .pg small{font-size:20px;margin-left:2px;opacity:1;display:inline}
+.cal .old{transform-origin:top;animation:flip .75s .45s ease-in both;box-shadow:0 2px 0 #CFC8B2}
+@keyframes flip{to{transform:rotateX(-110deg);opacity:0}}
+.flake{position:absolute;top:-24px;animation:fall linear both;pointer-events:none}
+@keyframes fall{to{transform:translate(40px,115vh) rotate(400deg)}}
+.flake.ff{top:auto;border-radius:50%;background:#FFF27A;box-shadow:0 0 10px 4px rgba(255,240,120,.7);animation:firefly 2.4s ease-in-out infinite alternate both}
+@keyframes firefly{0%{opacity:.1;transform:translate(0,0)}100%{opacity:1;transform:translate(24px,-30px)}}
+.egg{display:inline-block;width:14px;height:18px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#F4EBD0;margin:2px;animation:eggpop .4s both}
+@keyframes eggpop{0%{transform:scale(0)}70%{transform:scale(1.3)}100%{transform:scale(1)}}
+.dex li.taking{animation:takeout .3s ease-in forwards}
+@keyframes takeout{to{transform:translateX(70px) scale(.9);opacity:0}}
+.sn{animation:svgfall linear infinite}
+@keyframes svgfall{from{transform:translate(0,-30px)}to{transform:translate(18px,200px)}}
+.lf{animation:svgleaf linear infinite}
+@keyframes svgleaf{from{transform:translate(0,-30px) rotate(0)}to{transform:translate(-40px,200px) rotate(540deg)}}
+.fly{animation:svgfly 2.6s ease-in-out infinite alternate}
+@keyframes svgfly{0%{opacity:.05;transform:translate(0,0)}100%{opacity:1;transform:translate(14px,-18px)}}
+.lf,.sn{transform-box:fill-box}
+@media (prefers-reduced-motion:reduce){
+.screen{transform:none;transition:none}
+.larva,#g-beetle,#g-stag,#g-pupa,.legs,.newmark,.sn,.lf,.fly{animation:none}
+.stagefx,.flake{display:none}
+.stage.shake,.hop,.pts.up,.pts.down,.dex li.taking{animation:none}
+}
 </style>
 </head>
 <body>
@@ -152,6 +214,7 @@ input.num:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 <circle cx="150" cy="270" r="3" fill="#7A5740"/>
 <rect x="40" y="70" width="90" height="26" rx="4" fill="#8A6A3F"/>
 <rect x="46" y="76" width="78" height="8" rx="2" fill="#A98657"/>
+<g id="actor">
 <g class="larva" id="g-larva">
 <path d="M120 200 C120 160 180 150 215 175 C250 200 235 245 195 245 C165 245 160 220 180 212" fill="none" stroke="#F1E3C2" stroke-width="30" stroke-linecap="round"/>
 <circle cx="125" cy="205" r="17" fill="#C8782B"/><circle cx="119" cy="201" r="2.5" fill="#1F2A1F"/>
@@ -169,7 +232,7 @@ input.num:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 <circle cx="130" cy="198" r="17" fill="#3A1F12"/>
 <path d="M120 188 C98 168 94 146 112 128" stroke="#3A1F12" stroke-width="9" fill="none" stroke-linecap="round"/>
 <path d="M112 128 l-14 8" stroke="#3A1F12" stroke-width="6" stroke-linecap="round"/>
-<path d="M150 236 l-12 18 M190 240 l0 20 M230 236 l12 18" stroke="#2A170E" stroke-width="5" stroke-linecap="round"/>
+<path class="legs" d="M150 236 l-12 18 M190 240 l0 20 M230 236 l12 18" stroke="#2A170E" stroke-width="5" stroke-linecap="round"/>
 </g>
 <g id="g-stag" style="display:none">
 <ellipse cx="195" cy="205" rx="58" ry="32" fill="#2B1D17"/>
@@ -177,9 +240,11 @@ input.num:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 <circle cx="132" cy="200" r="18" fill="#1F1511"/>
 <path d="M118 192 C100 184 92 170 100 160" stroke="#1F1511" stroke-width="7" fill="none" stroke-linecap="round"/>
 <path d="M122 206 C104 212 96 226 104 236" stroke="#1F1511" stroke-width="7" fill="none" stroke-linecap="round"/>
-<path d="M150 232 l-12 18 M190 236 l0 20 M230 232 l12 18" stroke="#15100D" stroke-width="5" stroke-linecap="round"/>
+<path class="legs" d="M150 232 l-12 18 M190 236 l0 20 M230 232 l12 18" stroke="#15100D" stroke-width="5" stroke-linecap="round"/>
+</g>
 </g>
 </svg>
+<div class="stagefx" id="stagefx" aria-hidden="true"></div>
 </div>
 
 <div class="cases" id="cases" role="group" aria-label="飼育ケース"></div>
@@ -258,7 +323,7 @@ input.num:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 <h3>場所を選ぶ</h3>
 <div class="seg seg4" id="regtabs"></div>
 <div class="tilemap" id="tilemap"></div>
-<div class="note">都道府県を選びます。移動費は出発地からの直線距離が目安で、同じ都道府県の中は無料です。タイルの天気・気温は平地の値です。</div>
+<div class="note">都道府県を選びます。移動費は出発地からの直線距離が目安で、同じ都道府県の中は無料です。タイルの天気・気温は平地の値です。「初」の付いた県は、はじめて採集すると虫に出会いやすくなります(初回のみ、出現率2倍)。</div>
 <h3>地形</h3>
 <div class="seg" id="terrs"></div>
 <div class="note">山地は平地より約5℃低く、雨が多めです。いる昆虫も変わります(ミヤマ・アカアシは山地、ヒラタは平地が中心)。</div>
@@ -361,7 +426,8 @@ light:{n:'灯火採集',cost:500,t:[0,.3,1,.1],moon:.7,rain:.2,note:'月明か�
 rot:{n:'朽ち木割り',cost:0,t:[1,1,.5,.8],moon:0,rain:.5,note:'冬・春は幼虫が見つかる。割った木は元に戻す'},
 trap:{n:'トラップ',cost:300,t:[1,1,1,1],moon:.1,rain:.5,note:'夕に仕掛け、翌朝に回収。餌代'}
 };
-var MORDER=['sap','light','rot','trap'],GMAX=3;
+var MORDER=['sap','light','rot','trap'],GMAX=3,FIRSTX=2;
+function firstVisit(id){return id!==s.loc&&!s.vis[id];}
 var TIMES=['昼','夕','夜','明け方'];
 
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
@@ -378,7 +444,7 @@ function fmt(n){return n.toLocaleString('ja-JP');}
 
 var real=new Date();
 var def={food:72,wet:55,fresh:38,pts:1280,day:1,month:real.getMonth()+1,loc:'ibaraki',cases:2,nid:2,sel:1,
-insects:[{id:1,sp:'kabuto',stage:'幼虫',sex:'?',size:0,w:12,food:72,wet:55,fresh:38,g:1,age:0,touched:false,defect:false,place:'不明',cm:real.getMonth()+1}],dex:{kabuto:{seen:1,caught:1}},listings:[],lid:1,log:[],dead:[],pending:[],spec:[],t:Date.now(),inv:{matA:0,matB:5,matC:0,jelly:3,set:0},cs:{S:0,M:1,L:1},gm:0,cand:[],v:3};
+insects:[{id:1,sp:'kabuto',stage:'幼虫',sex:'?',size:0,w:12,food:72,wet:55,fresh:38,g:1,age:0,touched:false,defect:false,place:'不明',cm:real.getMonth()+1}],dex:{kabuto:{seen:1,caught:1}},listings:[],lid:1,log:[],dead:[],pending:[],spec:[],t:Date.now(),inv:{matA:0,matB:5,matC:0,jelly:3,set:0},cs:{S:0,M:1,L:1},gm:0,cand:[],vis:{},v:4};
 function load(){
 var o=null;
 try{var r=localStorage.getItem(KEY)||localStorage.getItem(OLD);if(r)o=JSON.parse(r);}catch(e){}
@@ -402,6 +468,7 @@ if((o&&typeof o==='object'&&(!o.cs||typeof o.cs!=='object'))||!x.cs||typeof x.cs
 x.cases=x.cs.S+x.cs.M+x.cs.L;
 if(!(x.gm>=0))x.gm=0;
 if(!Array.isArray(x.cand))x.cand=[];
+if(!x.vis||typeof x.vis!=='object')x.vis={};
 function fix(i){
 var d={food:typeof x.food==='number'?x.food:70,wet:typeof x.wet==='number'?x.wet:60,fresh:typeof x.fresh==='number'?x.fresh:80,g:i.stage==='幼虫'?1:0,age:0,touched:false,defect:false,place:'不明',cm:x.month,gene:1,cbf:0,mated:false,laying:false,hurt:false};
 for(var k in d){if(i[k]===undefined)i[k]=d[k];}}
@@ -414,7 +481,7 @@ else if(i.stage==='成虫'){i.age=(i.age||0)*3;}};
 x.insects.forEach(mg);
 x.listings.forEach(function(L){if(L){mg(L.ins);L.age=(L.age||0)*3;}});
 x.v=2;}
-if(x.v<3)x.v=3;
+if(x.v<4)x.v=4;
 return x;}
 var s=load();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
@@ -482,8 +549,14 @@ v+='<circle cx="'+x+'" cy="'+(top-8)+'" r="30" fill="'+P.l1+'"/><circle cx="'+(x
 }}
 if(si===2){for(var j=0;j<20;j++){v+='<circle cx="'+((j*53)%340+8)+'" cy="'+(128+((j*29)%46))+'" r="3" fill="'+(j%2?'#C9622B':'#E0A030')+'"/>';}}
 if(snow){v+='<ellipse cx="70" cy="140" rx="46" ry="9" fill="#fff"/><ellipse cx="200" cy="158" rx="60" ry="10" fill="#fff"/><ellipse cx="310" cy="136" rx="40" ry="8" fill="#fff"/>';}
+if(!RM){
+if(snow){for(var a=0;a<22;a++)v+='<circle class="sn" cx="'+((a*41)%350)+'" cy="'+((a*23)%60)+'" r="'+(1.5+(a%3))+'" fill="#fff" style="animation-duration:'+(3+(a%5)*.7).toFixed(1)+'s;animation-delay:-'+((a*.37)%4).toFixed(2)+'s"/>';}
+else if(si===2){for(var a=0;a<10;a++)v+='<path class="lf" d="M'+((a*37)%340+10)+' '+((a*19)%40)+' q5 -6 10 0 q-5 6 -10 0z" fill="'+(a%2?'#C9622B':'#E0A030')+'" style="animation-duration:'+(4+(a%4)).toFixed(1)+'s;animation-delay:-'+((a*.6)%4).toFixed(2)+'s"/>';}
+else if(si===0){for(var a=0;a<12;a++)v+='<ellipse class="lf" cx="'+((a*31)%340+8)+'" cy="'+((a*17)%40)+'" rx="3" ry="2" fill="#F6B8C8" style="animation-duration:'+(5+(a%3)).toFixed(1)+'s;animation-delay:-'+((a*.5)%5).toFixed(2)+'s"/>';}
+}
 var ov=[['#000',0],['#E67E22',.22],['#0B1B3A',.36],['#6B4A7A',.28]][t];
 if(ov[1])v+='<rect width="354" height="180" fill="'+ov[0]+'" opacity="'+ov[1]+'"/>';
+if(!RM&&si===1&&(t===2||t===3)){for(var a=0;a<9;a++)v+='<circle class="fly" cx="'+((a*43)%330+12)+'" cy="'+(60+(a*29)%90)+'" r="2.4" fill="#FFF27A" style="animation-delay:-'+((a*.45)%2.6).toFixed(2)+'s"/>';}
 return v+'</svg>';}
 
 /* ---------- 描画 ---------- */
@@ -496,9 +569,32 @@ function setBar(id,val,warn){
 $('b-'+id).style.width=val+'%';
 $('b-'+id).className=val<warn?'low':'';
 $('v-'+id).textContent=val+'%';}
+var shownPts=null,ptsRaf=0;
+function ptsAnim(){
+var el=$('pts'),to=s.pts;
+if(shownPts===null||RM||!window.requestAnimationFrame){shownPts=to;el.textContent=fmt(to)+' pt';return;}
+if(to===shownPts)return;
+var from=shownPts,t0=0,box=el.parentNode;shownPts=to;
+box.classList.remove('up','down');void box.offsetWidth;box.classList.add(to>from?'up':'down');
+cancelAnimationFrame(ptsRaf);
+var step=function(ts){if(!t0)t0=ts;var k=Math.min(1,(ts-t0)/600),e=1-Math.pow(1-k,3);el.textContent=fmt(Math.round(from+(to-from)*e))+' pt';if(k<1)ptsRaf=requestAnimationFrame(step);};
+ptsRaf=requestAnimationFrame(step);}
+function stageFx(kind){
+if(RM)return;
+var box=$('stagefx');if(!box)return;
+var h='',k;
+if(kind==='mist'){for(k=0;k<14;k++)h+='<i class="drop" style="left:'+(10+(k*37)%80)+'%;animation-delay:'+((k%7)*.07).toFixed(2)+'s"></i>';}
+else if(kind==='mat'){for(k=0;k<18;k++)h+='<i class="crumb" style="left:'+(5+(k*29)%90)+'%;animation-delay:'+((k%6)*.06).toFixed(2)+'s;background:'+(['#6E4D37','#8A6A3A','#4A3220'][k%3])+'"></i>';}
+else if(kind==='feed'){for(k=0;k<6;k++)h+='<i class="heart" style="left:'+(30+k*8)+'%;animation-delay:'+(k*.12).toFixed(2)+'s">♥</i>';}
+else if(kind==='clean'){h='<i class="sweep"></i>';}
+box.innerHTML=h;
+var st=box.parentNode;
+if(kind==='shake'){st.classList.remove('shake');void st.offsetWidth;st.classList.add('shake');}
+else if(kind==='feed'||kind==='mat'){var art=$('actor');if(art){art.classList.remove('hop');void art.getBoundingClientRect();art.classList.add('hop');}}
+clearTimeout(box._t);box._t=setTimeout(function(){box.innerHTML='';},1400);}
 function renderHome(){
 renderMeters();
-$('pts').textContent=fmt(s.pts)+' pt';
+ptsAnim();
 $('day').textContent='飼育 '+s.day+'日目';
 var reg=RID[s.loc];
 $('seasonlabel').textContent=reg.n+'・'+SEA[seasonIdx(reg,s.month)]+'('+s.month+'月)';
@@ -549,7 +645,7 @@ $('regtabs').innerHTML=rt;
 var t='';
 PREF.forEach(function(p){if(p.rid!==regTab)return;
 var c=travelCost(s.loc,p.id),pe=env(p.id,'plain');
-t+='<button type="button" class="tile" data-dest="'+p.id+'" aria-pressed="'+(p.id===dest)+'">'+p.n+'<small>'+pe.weather+' '+pe.temp+'℃</small><small>'+(c?fmt(c)+'円':'無料')+'</small></button>';});
+t+='<button type="button" class="tile'+(firstVisit(p.id)?' first':'')+'" data-dest="'+p.id+'" aria-pressed="'+(p.id===dest)+'">'+p.n+(firstVisit(p.id)?'<em class="newmark">初</em>':'')+'<small>'+pe.weather+' '+pe.temp+'℃</small><small>'+(c?fmt(c)+'円':'無料')+'</small></button>';});
 $('tilemap').innerHTML=t;
 var tt='';[['plain','平地','里山・雑木林'],['mtn','山地','標高の高い森']].forEach(function(x){var te=env(dest,x[0]);
 tt+='<button type="button" data-tr="'+x[0]+'" aria-pressed="'+(terr===x[0])+'">'+x[1]+'<small>'+x[2]+'</small><small>'+te.weather+' '+te.temp+'℃</small></button>';});
@@ -564,7 +660,7 @@ $('tods').innerHTML=td;
 $('todnote').textContent=METH[method].note;
 var cost=travelCost(s.loc,dest)+METH[method].cost;
 var free=s.cases-s.insects.length;
-$('plan').textContent='費用 '+fmt(cost)+'円(所持 '+fmt(s.pts)+')/ ケースの空き '+free+' / 今月の採集 '+s.gm+'/'+GMAX+'回。出発すると1日が経ちます。';
+$('plan').textContent=(firstVisit(dest)?'はじめての土地ボーナス: 出現率'+FIRSTX+'倍(初回のみ)。':'')+'費用 '+fmt(cost)+'円(所持 '+fmt(s.pts)+')/ ケースの空き '+free+' / 今月の採集 '+s.gm+'/'+GMAX+'回。出発すると1日が経ちます。';
 $('go-gather').disabled=false;
 var d='';
 SP.forEach(function(p){
@@ -576,7 +672,8 @@ d+='<li><span>'+(x.seen||x.caught?p.n+(p.isl?'('+p.isl+')':''):'？？？')+'</s
 $('dex').innerHTML=d;}
 /* ---------- 委託販売 ---------- */
 var BASE={oku:3000,himeoo:1500,kabuto:500,nokogiri:600,miyama:900,kokuwa:300,hirata:1200,suji:400,akaashi:1000,okihirata:1500,okikabuto:900,okinokogiri:1000};
-var MKA=[1,.75,1,1.4],MKL=[1,1,1.1,1.1],SLOTS=4,FEE=.1,UPKEEP=30;
+var MKA=[1,.75,1,1.4],MKL=[1,1,1.1,1.1],FEE=.1,UPKEEP=30;
+function slots(){return 3+Math.floor(s.cases/2);}
 var lastSell=0,priceFor=0;
 function mktSeason(){return seasonIdx(RID[s.loc],s.month);}
 function fairValue(i,cond){
@@ -602,7 +699,7 @@ if(!list.length)h='<option value="">出品できる個体がいません</option
 var cur=$('sell-ins');cur.innerHTML=h;
 var chosen=list.filter(function(i){return i.id===lastSell;})[0]||list[0];
 if(chosen){cur.value=String(chosen.id);}
-var full=s.listings.length>=SLOTS;
+var full=s.listings.length>=slots();
 if(chosen){
 var b=band(chosen,100);
 $('sell-info').innerHTML='目安の価格帯 <b>'+fmt(b[0])+'〜'+fmt(b[1])+'円</b><br><span class="note">状態が落ちると値打ちも下がります。</span>';
@@ -611,7 +708,7 @@ if(priceFor!==chosen.id){$('sell-price').value=Math.round((b[0]+b[1])/2/10)*10;p
 }else{$('sell-info').textContent='採集に出かけて個体を集めましょう。';}
 $('sell-go').disabled=!chosen||full;
 $('give-go').disabled=!chosen;
-$('slot-h').textContent='出品中('+s.listings.length+'/'+SLOTS+'枠)';
+$('slot-h').textContent='出品中('+s.listings.length+'/'+slots()+'枠。ケース2個ごとに1枠増える)';
 var l='';
 s.listings.forEach(function(L){
 l+='<li><span>'+insName(L.ins)+'<small>希望 '+fmt(L.price)+'円 / 状態 '+L.cond+'% / '+L.age+'か月経過</small></span><button type="button" class="small-btn" data-wd="'+L.lid+'">取り下げ</button></li>';});
@@ -628,7 +725,7 @@ s.pending.forEach(function(p){sl+='<li><span>'+specLabel(p)+'<small>依頼中(�
 s.spec.forEach(function(p){sl+='<li><span>'+specLabel(p)+'<small>完成</small></span><span></span></li>';});
 $('speclist').innerHTML=sl||'<li><span>まだありません</span><span></span></li>';
 var it='';
-[['matA','発酵が浅いマット(10L)','安価。栄養はやや少なめ(エサ85)。交換1回で1L使う',PRICE.matA],['matB','標準的なマット(10L)','交換1回で1L使い、幼虫は自動でエサを食べる',PRICE.matB],['matC','発酵が深いマット(10L)','高価。食いつきがよく湿りも保つ(エサ100・湿り60)',PRICE.matC],['jelly','昆虫ゼリー(1個)','成虫のエサ。エサやりで1個使う',PRICE.jelly],['set','産卵セット(1個)','交尾済みの雌を産卵させる',PRICE.set]].forEach(function(x){
+[['matA','発酵が浅いマット(20L)','安価。栄養はやや少なめ(エサ85)。交換1回で1L使う',PRICE.matA],['matB','標準的なマット(20L)','交換1回で1L使い、幼虫は自動でエサを食べる',PRICE.matB],['matC','発酵が深いマット(20L)','高価。食いつきがよく湿りも保つ(エサ100・湿り60)',PRICE.matC],['jelly','昆虫ゼリー(1個)','成虫のエサ。エサやりで1個使う',PRICE.jelly],['set','産卵セット(1個)','交尾済みの雌を産卵させる',PRICE.set]].forEach(function(x){
 it+='<li><span>'+x[1]+'<small>'+x[2]+' / 所持 '+s.inv[x[0]]+(/^mat/.test(x[0])?'L':'')+'</small></span><button type="button" class="small-btn" data-buy="'+x[0]+'">'+fmt(x[3])+'円</button></li>';});
 ['S','M','L'].forEach(function(k){it+='<li><span>'+CS[k].n+'<small>'+CS[k].d+' / 維持費 月'+CS[k].f+'円 / 所持 '+s.cs[k]+'個(合計'+s.cases+'/最大'+MAXCASE+')</small></span>'+'<span class="btnpair">'+(s.cases>=MAXCASE?'':'<button type="button" class="small-btn" data-buy="case'+k+'">'+fmt(CS[k].p)+'円</button>')+(s.cs[k]>0&&s.cases>1?'<button type="button" class="small-btn" data-sellcase="'+k+'">売る '+fmt(Math.round(CS[k].p/2))+'円</button>':'')+'</span></li>';});
 $('items').innerHTML=it;}
@@ -638,7 +735,7 @@ var id=parseInt($('sell-ins').value,10),ins=null,k;
 for(k=0;k<s.insects.length;k++){if(s.insects[k].id===id)ins=s.insects[k];}
 if(!ins){shopMsg('個体を選んでください。');return;}
 if(SPID[ins.sp].prot){shopMsg('保護種は売れません。');return;}
-if(s.listings.length>=SLOTS){shopMsg('出品枠がいっぱいです。');return;}
+if(s.listings.length>=slots()){shopMsg('出品枠がいっぱいです。');return;}
 var price=parseInt($('sell-price').value,10);
 if(!(price>=10)){shopMsg('価格は10円以上で入力してください。');return;}
 s.insects=s.insects.filter(function(i){return i.id!==id;});
@@ -747,6 +844,31 @@ function fxSold(items,gain,after){
 if(RM){after();return;}
 var c='';for(var k=0;k<14;k++)c+='<i class="coin" style="left:'+(4+Math.round((k*29)%90))+'%;animation-delay:'+((k%7)*.12).toFixed(2)+'s"></i>';
 fxShow(c+'<div class="fxbox"><span class="sold">SOLD</span><h2>委託品が売れた!</h2><p>'+items.join('<br>')+'</p><p><b style="font-size:22px">+'+fmt(gain)+'円</b></p></div>',2600,true,after);}
+var SEAICON=['🌸','☀️','🍁','❄️'];
+function flakes(si,n){
+var o='',k;
+for(k=0;k<n;k++){var x=(k*37)%96,d=(2.2+(k%5)*.5).toFixed(1),dl=((k*.23)%1.6).toFixed(2);
+if(si===3)o+='<i class="flake" style="left:'+x+'%;width:8px;height:8px;border-radius:50%;background:#fff;animation-duration:'+d+'s;animation-delay:'+dl+'s"></i>';
+else if(si===2)o+='<i class="flake" style="left:'+x+'%;width:14px;height:9px;border-radius:0 80% 0 80%;background:'+(k%2?'#C9622B':'#E0A030')+';animation-duration:'+d+'s;animation-delay:'+dl+'s"></i>';
+else if(si===0)o+='<i class="flake" style="left:'+x+'%;width:10px;height:7px;border-radius:50% 0 50% 0;background:#F6B8C8;animation-duration:'+d+'s;animation-delay:'+dl+'s"></i>';
+else o+='<i class="flake ff" style="left:'+x+'%;bottom:'+(10+(k*17)%60)+'%;width:6px;height:6px;animation-delay:-'+dl+'s"></i>';}
+return o;}
+function fxMonth(from,to,si,changed,after){
+if(RM){after();return;}
+var o=flakes(si,changed?22:12)+'<div class="fxbox"><div class="cal" aria-hidden="true"><div class="ring"><i></i><i></i></div><div class="pg">'+to+'<small>月</small></div><div class="pg old">'+from+'<small>月</small></div></div>';
+o+='<h2>'+(changed?SEAICON[si]+' '+SEA[si]+'になった':to+'月になった')+'</h2><p>'+RID[s.loc].n+'・飼育 '+s.day+'日目</p></div>';
+fxShow(o,1700,true,after);}
+function fxEvents(ev,after){
+var em=ev.filter(function(e){return e.k==='emerge';}),ha=ev.filter(function(e){return e.k==='hatch';}),pu=ev.filter(function(e){return e.k==='pupa';});
+if(RM||(!em.length&&!ha.length&&!pu.length)){after();return;}
+var o='<div class="fxbox">'+fxSparks(em.length||ha.length?12:4)+'<h2>'+(em.length?'羽化!':(ha.length?'孵化!':'蛹になった'))+'</h2>';
+em.slice(0,4).forEach(function(e,k){o+='<div class="gc" style="animation-delay:'+(.15+k*.2).toFixed(2)+'s">'+insSVG(e.i)+'<span><b>'+SPID[e.i.sp].n+'</b><small>'+e.i.sex+' '+e.i.size+'mm'+(e.i.cbf?' / 累代 F'+e.i.cbf:'')+'</small></span><span class="stamp">羽化</span></div>';});
+ha.forEach(function(h,k){var eg='';for(var a=0;a<Math.min(h.n,16);a++)eg+='<i class="egg" style="animation-delay:'+(.2+a*.06).toFixed(2)+'s"></i>';
+o+='<div class="gc" style="flex-direction:column;align-items:flex-start;animation-delay:'+(.15+(em.length+k)*.2).toFixed(2)+'s"><span><b>'+SPID[h.sp].n+'</b><small>幼虫 '+h.n+'匹(累代 F'+h.cbf+')</small></span><div>'+eg+'</div></div>';});
+pu.slice(0,3).forEach(function(e,k){o+='<div class="gc seen" style="animation-delay:'+(.2+k*.15).toFixed(2)+'s"><span><b>'+SPID[e.i.sp].n+'</b><small>蛹になった。霧吹き以外は触らずに待とう</small></span></div>';});
+o+='<button type="button" class="fxok" id="fx-ok">つづける</button></div>';
+fxShow(o,0,false,after);
+var ok=$('fx-ok');if(ok){ok.onclick=fxHide;ok.focus();}}
 function showResult(lines,restore){
 var el=$('result');
 var h='<b>結果</b><ul>'+lines.map(function(l){return'<li>'+l+'</li>';}).join('')+'</ul>';
@@ -780,14 +902,15 @@ var cost=travelCost(s.loc,dest)+METH[method].cost;
 if(s.pts<cost){showResult(['費用が足りません(必要 '+fmt(cost)+'円)。']);return;}
 var e=env(dest),mo=moon();
 s.pts-=cost;s.day+=1;
+var fv=firstVisit(dest),bx=fv?FIRSTX:1;s.vis[dest]=1;
 var found=[],seen=[];
 SP.forEach(function(sp){
 if(!present(sp,dest,terr))return;
-var p=chance(sp,e,mo);
+var p=Math.min(.9,chance(sp,e,mo)*bx);
 if(sp.prot){if(Math.random()<p*.4)seen.push(sp);return;}
 if(Math.random()<p)found.push(mk(sp,'成虫'));
 if(method==='rot'&&(e.si===0||e.si===3)){
-var pl=Math.min(.8,sp.base*.9*(sp.aff.rot||.5)*((e.weather==='雨'||e.weather==='雪')?.6:1));
+var pl=Math.min(.8,sp.base*.9*(sp.aff.rot||.5)*((e.weather==='雨'||e.weather==='雪')?.6:1)*bx);
 if(Math.random()<pl)found.push(mk(sp,'幼虫'));}});
 found.sort(function(){return Math.random()-.5;});
 leaveCand();
@@ -802,6 +925,7 @@ var d=s.dex[sp.id]||(s.dex[sp.id]={seen:0,caught:0});d.seen=1;
 lines.push(sp.n+'を見かけた(保護種のため捕獲できない)。図鑑に記録しました。');});
 if(found.length)lines.push(found.length+'匹見つけた。下から持ち帰る個体を選んでください(選ばなかった個体は、捕まえずにその場に残します)。');
 if(!found.length&&!seen.length)lines.push('今回は何も採れませんでした。');
+if(fv)lines.unshift('はじめての土地!虫に出会いやすかった(出現率 '+FIRSTX+'倍)。');
 lines.push('費用 '+fmt(cost)+'円 / 今月の採集 '+s.gm+'/'+GMAX+'回');
 var got=s.cand.map(function(c){return{sp:c.sp,stage:c.stage,sex:c.sex,size:c.size,w:c.w,place:c.place};});
 if(method==='rot')pendingRestore=true;
@@ -830,7 +954,7 @@ $('leave-cand').onclick=function(){var n=s.cand.length;leaveCand();save();render
 
 /* ---------- 世話・成長・死亡・標本 ---------- */
 var CASEFEE=50,SPECFEE=400;
-var PRICE={matA:800,matB:1300,matC:2000,jelly:40,set:600},MAXCASE=8;
+var MATL=20,PRICE={matA:800,matB:1300,matC:2000,jelly:40,set:600},MAXCASE=8;
 var EGG={oku:20,himeoo:12,kabuto:15,nokogiri:18,miyama:12,kokuwa:25,hirata:20,suji:25,akaashi:15,okihirata:20,okikabuto:15,okinokogiri:15};
 var CS={S:{n:'小型ケース',p:800,f:10,d:'小型のクワガタ向き'},M:{n:'中型ケース',p:1500,f:20,d:'中型のクワガタ向き'},L:{n:'大型ケース',p:2600,f:30,d:'カブトムシ・ヒラタ類などの大型種向き'}};
 var SZV={S:1,M:2,L:3},SZN={himeoo:'S',kokuwa:'S',suji:'S',akaashi:'S',miyama:'M',nokogiri:'M',okinokogiri:'M',oku:'M',kabuto:'L',okikabuto:'L',hirata:'L',okihirata:'L'};
@@ -882,7 +1006,7 @@ s.pts-=c;s.cs[z]+=1;s.cases+=1;buyMsg(CS[z].n+'を1つ増やしました(維持�
 else{
 var pr=PRICE[k];
 if(s.pts<pr){buyMsg('ポイントが足りません('+fmt(pr)+'円)。');return;}
-s.pts-=pr;s.inv[k]+=(/^mat/.test(k)?10:1);buyMsg('購入しました(-'+fmt(pr)+'円)。');fxGet(k,({matA:'浅発酵マット 10L',matB:'標準マット 10L',matC:'深発酵マット 10L',jelly:'昆虫ゼリー 1個',set:'産卵セット 1個'})[k]);}
+s.pts-=pr;s.inv[k]+=(/^mat/.test(k)?MATL:1);buyMsg('購入しました(-'+fmt(pr)+'円)。');fxGet(k,({matA:'浅発酵マット 20L',matB:'標準マット 20L',matC:'深発酵マット 20L',jelly:'昆虫ゼリー 1個',set:'産卵セット 1個'})[k]);}
 save();renderAll();}
 function tempNow(){var reg=RID[s.loc];return reg.t[seasonIdx(reg,s.month)];}
 function bads(i){
@@ -926,7 +1050,7 @@ $('modal').className='modal show';
 if(bs.length)bs[bs.length-1].focus();}
 function closeModal(){$('modal').className='modal';}
 function doAdvance(){
-var L=[];
+var L=[],EV=[],oldM=s.month;
 if(s.cand.length)leaveCand();
 s.gm=0;
 s.dead=[];
@@ -943,12 +1067,12 @@ if(i.stage==='幼虫'){
 if(st==='弱った'){i.w=Math.max(3,Math.round((i.w-1)*10)/10);L.push(nm+'(幼虫)は弱って、成長が遅れた。');}
 else if(cold){L.push(nm+'(幼虫)は低温で成長が止まった。');}
 else{i.g+=1;i.w=Math.round(Math.min(40,i.w+16/(NEED[i.sp]||6))*10)/10;L.push(nm+'(幼虫)は育った('+i.w+'g)。');
-if(i.g>=(NEED[i.sp]||6)){i.stage='蛹';i.touched=false;L.push(nm+'が蛹になった。触らずに待とう。');}}
+if(i.g>=(NEED[i.sp]||6)){i.stage='蛹';i.touched=false;L.push(nm+'が蛹になった。触らずに待とう。');EV.push({k:'pupa',i:i});}}
 }else if(i.stage==='蛹'){
 if((SPID[i.sp].w[newSi]||0)<.15){L.push(nm+'(蛹)は蛹室で、出てくる季節を待っている。');}
 else if(i.touched){emerge(i,true);L.push(nm+'は羽化したが、触られたために羽化不全になった。');}
-else if(st==='弱った'){var df=Math.random()<.5;emerge(i,df);L.push(nm+'が羽化した'+(df?'が、乾燥のため羽化不全になった。':'('+i.sex+' '+i.size+'mm)。'));}
-else{emerge(i,false);L.push(nm+'が羽化した('+i.sex+' '+i.size+'mm)。');}
+else if(st==='弱った'){var df=Math.random()<.5;emerge(i,df);if(!df)EV.push({k:'emerge',i:i});L.push(nm+'が羽化した'+(df?'が、乾燥のため羽化不全になった。':'('+i.sex+' '+i.size+'mm)。'));}
+else{emerge(i,false);EV.push({k:'emerge',i:i});L.push(nm+'が羽化した('+i.sex+' '+i.size+'mm)。');}
 }else{
 i.age+=1;
 if(i.laying){
@@ -966,7 +1090,7 @@ clutches.forEach(function(c){
 var n=0;while(n<c.eggs&&roomFor(c.sp,new Array(n).fill(c.sp)))n++;
 for(var k=0;k<n;k++){
 s.insects.push({id:s.nid++,sp:c.sp,stage:'幼虫',sex:Math.random()<.5?'♂':'♀',size:0,w:5,food:70,wet:60,fresh:80,g:0,age:0,touched:false,defect:false,place:c.place||'不明',cm:s.month,gene:c.gene,cbf:c.cbf,mated:false,laying:false,hurt:false});}
-if(n>0)L.push(SPID[c.sp].n+'の幼虫が'+n+'匹孵化した(累代 F'+c.cbf+')。');
+if(n>0){L.push(SPID[c.sp].n+'の幼虫が'+n+'匹孵化した(累代 F'+c.cbf+')。');EV.push({k:'hatch',sp:c.sp,n:n,cbf:c.cbf});}
 if(c.eggs>n)L.push('合うケースが足りず、卵 '+(c.eggs-n)+'個は孵化できなかった。');});
 var fee=Math.min(caseFee(),s.pts);s.pts-=fee;
 L.push('ケース維持費 '+fmt(fee)+'円');
@@ -979,7 +1103,8 @@ var reg=RID[s.loc];
 if(newSi!==oldSi)L.unshift('季節が'+SEA[newSi]+'に変わった。');
 if(s.dead.some(specOK))L.push('標本の依頼は、ショップで今のうちにできます。');
 var showM=function(){openModal(s.month+'月になりました('+reg.n+'・'+SEA[newSi]+'、戻せません)',L,[{t:'閉じる',p:true,f:closeModal}]);};
-if(r.sold)fxSold(r.items,r.gain,showM);else showM();}
+var afterSold=function(){fxEvents(EV,showM);};
+fxMonth(oldM,s.month,newSi,newSi!==oldSi,function(){if(r.sold)fxSold(r.items,r.gain,afterSold);else afterSold();});}
 function reqSpec(k){
 var d=s.dead[k];
 if(!d||!specOK(d))return;
@@ -995,22 +1120,22 @@ save();renderAll();shopMsg('標本を依頼しました。次に月を進めた�
 function care(kind){
 var i=selIns();
 if(!i){say('個体がいません');return;}
-if(i.stage==='蛹'&&kind==='mist'){if(i.wet>=100){say('これ以上湿らせると過湿です');return;}i.wet=Math.min(100,i.wet+15);save();renderHome();say('蛹室を崩さないよう、外から霧吹きをした');return;}
-if(i.stage==='蛹'){i.touched=true;save();renderHome();say('蛹に触ってしまった…羽化不全の原因になります');return;}
+if(i.stage==='蛹'&&kind==='mist'){if(i.wet>=100){say('これ以上湿らせると過湿です');return;}i.wet=Math.min(100,i.wet+15);save();renderHome();stageFx('mist');say('蛹室を崩さないよう、外から霧吹きをした');return;}
+if(i.stage==='蛹'){i.touched=true;save();renderHome();stageFx('shake');say('蛹に触ってしまった…羽化不全の原因になります');return;}
 if(kind==='feed'){
 if(i.food>=100){say('もうお腹いっぱいです');return;}
 if(i.stage==='成虫'){
 if(s.inv.jelly<1){say('ゼリーがありません(ショップで購入)');return;}
-s.inv.jelly-=1;i.food=Math.min(100,i.food+25);i.fresh=Math.max(0,i.fresh-3);say('ゼリーを足した');}
+s.inv.jelly-=1;i.food=Math.min(100,i.food+25);i.fresh=Math.max(0,i.fresh-3);say('ゼリーを足した');stageFx('feed');}
 else{say('幼虫は、マット交換をすると自動でエサを食べます');return;}}
 else if(kind==='mist'){
 if(i.wet>=100){say('これ以上湿らせると過湿です');return;}
-i.wet=Math.min(100,i.wet+15);say('霧吹きをした');}
-else if(i.stage==='成虫'){i.fresh=100;say('ケースを掃除した');}
+i.wet=Math.min(100,i.wet+15);say('霧吹きをした');stageFx('mist');}
+else if(i.stage==='成虫'){i.fresh=100;say('ケースを掃除した');stageFx('clean');}
 else{
 var mk=$('matkind').value;
 if(!(s.inv[mk]>=1)){say('そのマットが1L必要です(ショップで購入)');return;}
-s.inv[mk]-=1;i.fresh=100;i.wet=(mk==='matC'?60:50);i.food=(mk==='matA'?85:100);say('マットを交換した(1L使用)。幼虫がエサを食べた');}
+s.inv[mk]-=1;i.fresh=100;i.wet=(mk==='matC'?60:50);i.food=(mk==='matA'?85:100);say('マットを交換した(1L使用)。幼虫がエサを食べた');stageFx('mat');}
 save();renderHome();}
 $('a-feed').onclick=function(){care('feed');};
 $('a-mist').onclick=function(){care('mist');};
@@ -1040,7 +1165,7 @@ document.addEventListener('click',function(ev){
 var b=ev.target.closest?ev.target.closest('button'):null;if(!b)return;
 if(b.hasAttribute('data-go')){var gt=b.getAttribute('data-go');if(fxBusy)return;if(gt==='shop'&&!$('shop').classList.contains('active')){shopLoad(function(){show('shop');});return;}show(gt);return;}
 if(b.hasAttribute('data-buy')){buy(b.getAttribute('data-buy'));return;}
-if(b.hasAttribute('data-take')){takeCand(parseInt(b.getAttribute('data-take'),10));return;}
+if(b.hasAttribute('data-take')){var tk=parseInt(b.getAttribute('data-take'),10),li=b.closest('li');if(RM||!li){takeCand(tk);return;}li.classList.add('taking');b.disabled=true;setTimeout(function(){takeCand(tk);},280);return;}
 if(b.hasAttribute('data-sellcase')){sellCase(b.getAttribute('data-sellcase'));return;}
 if(b.hasAttribute('data-spec')){reqSpec(parseInt(b.getAttribute('data-spec'),10));return;}
 if(b.hasAttribute('data-wd')){withdraw(parseInt(b.getAttribute('data-wd'),10));return;}
