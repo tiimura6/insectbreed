@@ -77,6 +77,7 @@ select{min-height:44px;border:2px solid var(--forest);border-radius:12px;backgro
 .dex li span:last-child{color:var(--sub);text-align:right}
 .dex li small{display:block;color:var(--sub);font-size:11px}
 .dex li .small-btn{min-height:44px;flex:0 0 auto}
+.btnpair{display:flex;gap:6px;flex:0 0 auto}
 .modal{position:absolute;inset:0;background:rgba(20,30,20,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:10}
 .modal.show{display:flex}
 .modal .box{background:var(--bg);border-radius:18px;padding:18px;width:100%;max-height:82%;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
@@ -235,12 +236,13 @@ input.num:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 <label for="sell-price" class="note">希望価格(円)</label>
 <input type="number" id="sell-price" class="num" min="10" step="10" inputmode="numeric">
 <button type="button" class="primary" id="sell-go">委託に出す</button>
+<button type="button" class="small-btn" id="give-go" style="margin-top:8px">譲渡する(0円・すぐ手放す)</button>
 <div class="note" id="sell-msg" role="status" aria-live="polite"></div>
 <h3 id="slot-h">出品中</h3>
 <ul class="dex" id="listings"></ul>
 <h3>売買の記録</h3>
 <ul class="dex" id="log"></ul>
-<div class="note">売れた場合、手数料10%を引いた額が入ります。売れ残ると、月ごとに維持費30円がかかり、状態が落ちて値打ちが下がります。ゲーム内の疑似取引で、実在の個体の売買ではありません。</div>
+<div class="note">譲渡は、ゲーム内で知人やイベントに無償で譲る扱いです(野外に放すことではありません)。売れた場合、手数料10%を引いた額が入ります。売れ残ると、月ごとに維持費30円がかかり、状態が落ちて値打ちが下がります。ゲーム内の疑似取引で、実在の個体の売買ではありません。</div>
 <h3>死亡した個体(標本の依頼は今だけ)</h3>
 <ul class="dex" id="deadlist"></ul>
 <h3>標本</h3>
@@ -262,7 +264,7 @@ input.num:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 <div class="note">山地は平地より約5℃低く、雨が多めです。いる昆虫も変わります(ミヤマ・アカアシは山地、ヒラタは平地が中心)。</div>
 
 <h3>出発地</h3>
-<label for="locsel" class="note">旅行先などで変えられます(通信による自動推定は未実装)</label>
+<label for="locsel" class="note">引っ越しや旅行で変えられます。変えると、移動と同じ費用がかかります(通信による自動推定は未実装)</label>
 <select id="locsel"></select>
 
 <h3>採集方法</h3>
@@ -275,6 +277,7 @@ input.num:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 <div class="note" id="plan"></div>
 <button type="button" class="primary" id="go-gather">出発する</button>
 <div class="result" id="result" role="status" aria-live="polite"></div>
+<div id="cand"></div>
 
 <h3>この場所の昆虫</h3>
 <ul class="dex" id="dex"></ul>
@@ -358,7 +361,7 @@ light:{n:'灯火採集',cost:500,t:[0,.3,1,.1],moon:.7,rain:.2,note:'月明か�
 rot:{n:'朽ち木割り',cost:0,t:[1,1,.5,.8],moon:0,rain:.5,note:'冬・春は幼虫が見つかる。割った木は元に戻す'},
 trap:{n:'トラップ',cost:300,t:[1,1,1,1],moon:.1,rain:.5,note:'夕に仕掛け、翌朝に回収。餌代'}
 };
-var MORDER=['sap','light','rot','trap'];
+var MORDER=['sap','light','rot','trap'],GMAX=3;
 var TIMES=['昼','夕','夜','明け方'];
 
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
@@ -375,7 +378,7 @@ function fmt(n){return n.toLocaleString('ja-JP');}
 
 var real=new Date();
 var def={food:72,wet:55,fresh:38,pts:1280,day:1,month:real.getMonth()+1,loc:'ibaraki',cases:2,nid:2,sel:1,
-insects:[{id:1,sp:'kabuto',stage:'幼虫',sex:'?',size:0,w:12,food:72,wet:55,fresh:38,g:1,age:0,touched:false,defect:false,place:'不明',cm:real.getMonth()+1}],dex:{kabuto:{seen:1,caught:1}},listings:[],lid:1,log:[],dead:[],pending:[],spec:[],t:Date.now(),inv:{matA:0,matB:5,matC:0,jelly:3,set:0},cs:{S:0,M:1,L:1},v:2};
+insects:[{id:1,sp:'kabuto',stage:'幼虫',sex:'?',size:0,w:12,food:72,wet:55,fresh:38,g:1,age:0,touched:false,defect:false,place:'不明',cm:real.getMonth()+1}],dex:{kabuto:{seen:1,caught:1}},listings:[],lid:1,log:[],dead:[],pending:[],spec:[],t:Date.now(),inv:{matA:0,matB:5,matC:0,jelly:3,set:0},cs:{S:0,M:1,L:1},gm:0,cand:[],v:3};
 function load(){
 var o=null;
 try{var r=localStorage.getItem(KEY)||localStorage.getItem(OLD);if(r)o=JSON.parse(r);}catch(e){}
@@ -394,9 +397,11 @@ if(!x.inv||typeof x.inv!=='object')x.inv={matA:0,matB:5,matC:0,jelly:3,set:0};
 if(x.inv.mat>=0){x.inv.matB=(x.inv.matB||0)+x.inv.mat;delete x.inv.mat;}
 ['matA','matB','matC','jelly','set'].forEach(function(k){if(!(x.inv[k]>=0))x.inv[k]=0;});
 if(!(x.cases>=1))x.cases=2;
-if(!x.cs||typeof x.cs!=='object'){x.cs={S:0,M:0,L:x.cases};}
+if((o&&typeof o==='object'&&(!o.cs||typeof o.cs!=='object'))||!x.cs||typeof x.cs!=='object'){x.cs={S:0,M:0,L:x.cases};}
 ['S','M','L'].forEach(function(k){if(!(x.cs[k]>=0))x.cs[k]=0;});
 x.cases=x.cs.S+x.cs.M+x.cs.L;
+if(!(x.gm>=0))x.gm=0;
+if(!Array.isArray(x.cand))x.cand=[];
 function fix(i){
 var d={food:typeof x.food==='number'?x.food:70,wet:typeof x.wet==='number'?x.wet:60,fresh:typeof x.fresh==='number'?x.fresh:80,g:i.stage==='幼虫'?1:0,age:0,touched:false,defect:false,place:'不明',cm:x.month,gene:1,cbf:0,mated:false,laying:false,hurt:false};
 for(var k in d){if(i[k]===undefined)i[k]=d[k];}}
@@ -409,6 +414,7 @@ else if(i.stage==='成虫'){i.age=(i.age||0)*3;}};
 x.insects.forEach(mg);
 x.listings.forEach(function(L){if(L){mg(L.ins);L.age=(L.age||0)*3;}});
 x.v=2;}
+if(x.v<3)x.v=3;
 return x;}
 var s=load();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
@@ -498,7 +504,7 @@ var reg=RID[s.loc];
 $('seasonlabel').textContent=reg.n+'・'+SEA[seasonIdx(reg,s.month)]+'('+s.month+'月)';
 var ins=selIns();
 $('selname').textContent=ins?insName(ins):'個体なし';
-$('day').textContent='飼育 '+s.day+'日目'+(ins?' / 状態:'+status(ins)+(ins.stage==='蛹'?'(触らない)':''):'');
+$('day').textContent='飼育 '+s.day+'日目'+(ins?' / 状態:'+status(ins)+(ins.stage==='蛹'?'(霧吹き以外は触らない)':''):'');
 var larva=ins&&ins.stage==='幼虫',adult=ins&&ins.stage==='成虫',pupa=ins&&ins.stage==='蛹';
 $('g-pupa').style.display=pupa?'':'none';
 var isBeetle=ins&&/カブト/.test(SPID[ins.sp].n)||(ins&&ins.sp==='yanbaru');
@@ -558,7 +564,7 @@ $('tods').innerHTML=td;
 $('todnote').textContent=METH[method].note;
 var cost=travelCost(s.loc,dest)+METH[method].cost;
 var free=s.cases-s.insects.length;
-$('plan').textContent='費用 '+fmt(cost)+'円(所持 '+fmt(s.pts)+')/ ケースの空き '+free+'。出発すると1日が経ちます。';
+$('plan').textContent='費用 '+fmt(cost)+'円(所持 '+fmt(s.pts)+')/ ケースの空き '+free+' / 今月の採集 '+s.gm+'/'+GMAX+'回。出発すると1日が経ちます。';
 $('go-gather').disabled=false;
 var d='';
 SP.forEach(function(p){
@@ -604,6 +610,7 @@ lastSell=chosen.id;
 if(priceFor!==chosen.id){$('sell-price').value=Math.round((b[0]+b[1])/2/10)*10;priceFor=chosen.id;}
 }else{$('sell-info').textContent='採集に出かけて個体を集めましょう。';}
 $('sell-go').disabled=!chosen||full;
+$('give-go').disabled=!chosen;
 $('slot-h').textContent='出品中('+s.listings.length+'/'+SLOTS+'枠)';
 var l='';
 s.listings.forEach(function(L){
@@ -623,7 +630,7 @@ $('speclist').innerHTML=sl||'<li><span>まだありません</span><span></span>
 var it='';
 [['matA','発酵が浅いマット(10L)','安価。栄養はやや少なめ(エサ85)。交換1回で1L使う',PRICE.matA],['matB','標準的なマット(10L)','交換1回で1L使い、幼虫は自動でエサを食べる',PRICE.matB],['matC','発酵が深いマット(10L)','高価。食いつきがよく湿りも保つ(エサ100・湿り60)',PRICE.matC],['jelly','昆虫ゼリー(1個)','成虫のエサ。エサやりで1個使う',PRICE.jelly],['set','産卵セット(1個)','交尾済みの雌を産卵させる',PRICE.set]].forEach(function(x){
 it+='<li><span>'+x[1]+'<small>'+x[2]+' / 所持 '+s.inv[x[0]]+(/^mat/.test(x[0])?'L':'')+'</small></span><button type="button" class="small-btn" data-buy="'+x[0]+'">'+fmt(x[3])+'円</button></li>';});
-['S','M','L'].forEach(function(k){it+='<li><span>'+CS[k].n+'<small>'+CS[k].d+' / 維持費 月'+CS[k].f+'円 / 所持 '+s.cs[k]+'個(合計'+s.cases+'/最大'+MAXCASE+')</small></span>'+(s.cases>=MAXCASE?'<span></span>':'<button type="button" class="small-btn" data-buy="case'+k+'">'+fmt(CS[k].p)+'円</button>')+'</li>';});
+['S','M','L'].forEach(function(k){it+='<li><span>'+CS[k].n+'<small>'+CS[k].d+' / 維持費 月'+CS[k].f+'円 / 所持 '+s.cs[k]+'個(合計'+s.cases+'/最大'+MAXCASE+')</small></span>'+'<span class="btnpair">'+(s.cases>=MAXCASE?'':'<button type="button" class="small-btn" data-buy="case'+k+'">'+fmt(CS[k].p)+'円</button>')+(s.cs[k]>0&&s.cases>1?'<button type="button" class="small-btn" data-sellcase="'+k+'">売る '+fmt(Math.round(CS[k].p/2))+'円</button>':'')+'</span></li>';});
 $('items').innerHTML=it;}
 function shopMsg(t){$('sell-msg').textContent=t;}
 function sellGo(){
@@ -639,6 +646,16 @@ s.listings.push({lid:s.lid++,ins:ins,price:price,cond:100,age:0});
 lastSell=0;priceFor=0;if(s.sel===id)s.sel=s.insects.length?s.insects[0].id:0;
 addLog(SPID[ins.sp].n+'を'+fmt(price)+'円で委託に出した');
 save();renderAll();shopMsg('委託に出しました。売れるかどうかは、月を進めたときに決まります。');}
+function giveGo(){
+var id=parseInt($('sell-ins').value,10),ins=null;
+s.insects.forEach(function(i){if(i.id===id)ins=i;});
+if(!ins){shopMsg('個体を選んでください。');return;}
+openModal('譲渡しますか',[insName(ins)+' を、ゲーム内で知人やイベントに無償で譲ります。','代金は入りません。取り消せません。野外に放すことではありません。'],[{t:'やめる',f:closeModal},{t:'譲渡する',p:true,f:function(){
+closeModal();
+s.insects=s.insects.filter(function(i){return i.id!==id;});
+if(s.sel===id)s.sel=s.insects.length?s.insects[0].id:0;
+lastSell=0;priceFor=0;addLog(SPID[ins.sp].n+'を譲渡した');
+save();renderAll();shopMsg('譲渡しました。');}}]);}
 function withdraw(lid){
 var L=null;s.listings.forEach(function(x){if(x.lid===lid)L=x;});
 if(!L)return;
@@ -714,7 +731,7 @@ if(RM&&!got.length&&!seen.length)return;
 var o='<div class="fxbox">';
 if(!got.length&&!seen.length){o+='<h2>今回は空振り…</h2><p>何も採れませんでした。時間帯や天気、採集方法を変えてみましょう。</p><button type="button" class="fxok" id="fx-ok">閉じる</button></div>';}
 else{
-o+=fxSparks(got.length?10:0)+'<h2>'+(got.length?'ゲット!':'発見!')+'</h2>';
+o+=fxSparks(got.length?10:0)+'<h2>'+(got.length?'見つけた!':'発見!')+'</h2>';
 got.slice(0,6).forEach(function(i,k){
 o+='<div class="gc" style="animation-delay:'+(.15+k*.2).toFixed(2)+'s">'+insSVG(i)+'<span><b>'+SPID[i.sp].n+'</b><small>'+(i.stage==='成虫'?i.sex+' '+i.size+'mm':'幼虫 '+i.w+'g')+' / '+i.place+'</small></span>'+(newSp[i.sp]?'<span class="stamp">NEW</span>':'')+'</div>';});
 if(got.length>6)o+='<p>ほか '+(got.length-6)+'匹</p>';
@@ -749,12 +766,14 @@ function doGather(){
 if(fxBusy)return;
 var m0=null;
 if(pendingRestore)m0='前回割った朽ち木を、まだ元に戻していません。';
+else if(s.gm>=GMAX)m0='今月の採集は '+GMAX+' 回までです。月を進めると、また出かけられます。';
 else if(s.cases-s.insects.length<=0)m0='飼育ケースがいっぱいです。持ち帰れないので出発できません。';
 else{var c0=travelCost(s.loc,dest)+METH[method].cost;if(s.pts<c0)m0='費用が足りません(必要 '+fmt(c0)+'円)。';}
 if(m0){showResult([m0]);return;}
 fxTravel(distKm(s.loc,dest),RID[dest].n,travelCost(s.loc,dest)+METH[method].cost,runGather);}
 function runGather(){
 if(pendingRestore){showResult(['前回割った朽ち木を、まだ元に戻していません。']);return;}
+if(s.gm>=GMAX){showResult(['今月の採集は '+GMAX+' 回までです。']);return;}
 var free=s.cases-s.insects.length;
 if(free<=0){showResult(['飼育ケースがいっぱいです。持ち帰れないので出発できません。']);return;}
 var cost=travelCost(s.loc,dest)+METH[method].cost;
@@ -771,35 +790,62 @@ if(method==='rot'&&(e.si===0||e.si===3)){
 var pl=Math.min(.8,sp.base*.9*(sp.aff.rot||.5)*((e.weather==='雨'||e.weather==='雪')?.6:1));
 if(Math.random()<pl)found.push(mk(sp,'幼虫'));}});
 found.sort(function(){return Math.random()-.5;});
-var take=[],pend=[];found.forEach(function(f){if(take.length<free&&roomFor(f.sp.id,pend)){take.push(f);pend.push(f.sp.id);}});var left=found.length-take.length,lines=[],got=[],newSp={};
-take.forEach(function(f){
-var ins={id:s.nid++,sp:f.sp.id,stage:f.stage,sex:f.sex,size:f.size,w:f.w,food:70,wet:60,fresh:80,g:f.stage==='幼虫'?Math.max(0,Math.min((NEED[f.sp.id]||6)-1,Math.round((NEED[f.sp.id]||6)*(f.w-4)/16))):0,age:0,touched:false,defect:false,place:RID[dest].n+(terr==='mtn'?'・山地':'・平地'),cm:s.month,gene:1,cbf:0,mated:false,laying:false,hurt:false};
-s.insects.push(ins);got.push(ins);
+leaveCand();
+var lines=[],newSp={},place=RID[dest].n+(terr==='mtn'?'・山地':'・平地');
+s.gm+=1;
+found.forEach(function(f){
 if(!(s.dex[f.sp.id]&&s.dex[f.sp.id].caught))newSp[f.sp.id]=true;
-var d=s.dex[f.sp.id]||(s.dex[f.sp.id]={seen:0,caught:0});
-d.seen=1;d.caught=(d.caught||0)+1;
-lines.push(insName(ins)+(f.stage==='幼虫'?' '+f.w+'g':'')+' をケースへ');});
+var d=s.dex[f.sp.id]||(s.dex[f.sp.id]={seen:0,caught:0});d.seen=1;
+s.cand.push({sp:f.sp.id,stage:f.stage,sex:f.sex,size:f.size,w:f.w,place:place,cm:s.month});});
 seen.forEach(function(sp){
 var d=s.dex[sp.id]||(s.dex[sp.id]={seen:0,caught:0});d.seen=1;
 lines.push(sp.n+'を見かけた(保護種のため捕獲できない)。図鑑に記録しました。');});
-if(left>0)lines.push('合うケースの空きがなく、'+left+'匹はその場で見送りました(大型種は大型ケースが必要)。');
-if(!take.length&&!seen.length)lines.push('今回は何も採れませんでした。');
-lines.push('費用 '+fmt(cost)+'円');
-if(!s.sel||!selIns())s.sel=s.insects.length?s.insects[0].id:0;
+if(found.length)lines.push(found.length+'匹見つけた。下から持ち帰る個体を選んでください(選ばなかった個体は、捕まえずにその場に残します)。');
+if(!found.length&&!seen.length)lines.push('今回は何も採れませんでした。');
+lines.push('費用 '+fmt(cost)+'円 / 今月の採集 '+s.gm+'/'+GMAX+'回');
+var got=s.cand.map(function(c){return{sp:c.sp,stage:c.stage,sex:c.sex,size:c.size,w:c.w,place:c.place};});
 if(method==='rot')pendingRestore=true;
-save();renderAll();showResult(lines,method==='rot');fxCatch(got,seen,newSp);}
+save();renderAll();showResult(lines,method==='rot');renderCand();fxCatch(got,seen,newSp);}
+function leaveCand(){if(s.cand.length){addLog('採集で見つけた '+s.cand.length+' 匹を、その場に残した');}s.cand=[];}
+function takeCand(k){
+var c=s.cand[k];if(!c)return;
+if(s.cases-s.insects.length<=0||!roomFor(c.sp)){renderCand('合うサイズのケースに空きがありません(大型種は大型ケースが必要)。');return;}
+var n=NEED[c.sp]||6;
+var ins={id:s.nid++,sp:c.sp,stage:c.stage,sex:c.sex,size:c.size,w:c.w,food:70,wet:60,fresh:80,g:c.stage==='幼虫'?Math.max(0,Math.min(n-1,Math.round(n*(c.w-4)/16))):0,age:0,touched:false,defect:false,place:c.place,cm:c.cm,gene:1,cbf:0,mated:false,laying:false,hurt:false};
+s.insects.push(ins);s.cand.splice(k,1);
+var d=s.dex[c.sp]||(s.dex[c.sp]={seen:0,caught:0});d.seen=1;d.caught=(d.caught||0)+1;
+if(!s.sel||!selIns())s.sel=ins.id;
+save();renderAll();renderCand(insName(ins)+' をケースへ入れた。');}
+function renderCand(msg){
+var el=$('cand');if(!el)return;
+if(!s.cand.length){el.innerHTML=msg?'<p class="note">'+msg+'</p>':'';return;}
+var free=s.cases-s.insects.length;
+var h='<b>持ち帰る個体を選ぶ</b>(ケースの空き '+free+')<ul class="dex">';
+s.cand.forEach(function(c,k){var ok=free>0&&roomFor(c.sp);
+h+='<li><span>'+SPID[c.sp].n+'<small>'+(c.stage==='成虫'?c.sex+' '+c.size+'mm':'幼虫 '+c.w+'g')+' / '+(SZN[c.sp]?CS[SZN[c.sp]].n:'中型ケース')+'以上</small></span><button type="button" class="small-btn" data-take="'+k+'"'+(ok?'':' disabled')+'>持ち帰る</button></li>';});
+h+='</ul><button type="button" class="small-btn" id="leave-cand">残りはその場に残す</button>';
+if(msg)h+='<p class="note">'+msg+'</p>';
+el.innerHTML=h;
+$('leave-cand').onclick=function(){var n=s.cand.length;leaveCand();save();renderAll();renderCand(n+' 匹を捕まえずに、その場に残しました。');};}
 
 /* ---------- 世話・成長・死亡・標本 ---------- */
 var CASEFEE=50,SPECFEE=400;
 var PRICE={matA:800,matB:1300,matC:2000,jelly:40,set:600},MAXCASE=8;
 var EGG={oku:20,himeoo:12,kabuto:15,nokogiri:18,miyama:12,kokuwa:25,hirata:20,suji:25,akaashi:15,okihirata:20,okikabuto:15,okinokogiri:15};
-var CS={S:{n:'小型ケース',p:800,f:30,d:'小型のクワガタ向き'},M:{n:'中型ケース',p:1500,f:50,d:'中型のクワガタ向き'},L:{n:'大型ケース',p:2600,f:80,d:'カブトムシ・ヒラタ類などの大型種向き'}};
+var CS={S:{n:'小型ケース',p:800,f:10,d:'小型のクワガタ向き'},M:{n:'中型ケース',p:1500,f:20,d:'中型のクワガタ向き'},L:{n:'大型ケース',p:2600,f:30,d:'カブトムシ・ヒラタ類などの大型種向き'}};
 var SZV={S:1,M:2,L:3},SZN={himeoo:'S',kokuwa:'S',suji:'S',akaashi:'S',miyama:'M',nokogiri:'M',okinokogiri:'M',oku:'M',kabuto:'L',okikabuto:'L',hirata:'L',okihirata:'L'};
 function szOf(id){return SZN[id]||'M';}
 function fitsAll(ids){var sl=[];['S','M','L'].forEach(function(k){for(var a=0;a<s.cs[k];a++)sl.push(SZV[k]);});sl.sort(function(a,b){return a-b;});
 var nd=ids.map(function(id){return SZV[szOf(id)];}).sort(function(a,b){return b-a;});
 for(var a=0;a<nd.length;a++){var j=-1;for(var b=0;b<sl.length;b++){if(sl[b]>=nd[a]){j=b;break;}}if(j<0)return false;sl.splice(j,1);}return true;}
 function roomFor(sp,extra){var ids=s.insects.map(function(i){return i.sp;});(extra||[]).forEach(function(e){ids.push(e);});ids.push(sp);return fitsAll(ids);}
+function sellCase(z){
+if(!(s.cs[z]>0)||s.cases<=1){buyMsg('これ以上ケースを減らせません。');return;}
+s.cs[z]-=1;
+if(!fitsAll(s.insects.map(function(i){return i.sp;}))){s.cs[z]+=1;buyMsg('このケースは使用中です。空いているケースだけ売れます。');return;}
+s.cases-=1;var g=Math.round(CS[z].p/2);s.pts+=g;
+buyMsg(CS[z].n+'を '+fmt(g)+'円で売りました(購入価格の半額)。');addLog(CS[z].n+'を売った(+'+fmt(g)+'円)');
+save();renderAll();}
 function caseFee(){return s.cs.S*CS.S.f+s.cs.M*CS.M.f+s.cs.L*CS.L.f;}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
 function isStag(i){return !(/カブト/.test(SPID[i.sp].n)||i.sp==='yanbaru');}
@@ -881,6 +927,8 @@ if(bs.length)bs[bs.length-1].focus();}
 function closeModal(){$('modal').className='modal';}
 function doAdvance(){
 var L=[];
+if(s.cand.length)leaveCand();
+s.gm=0;
 s.dead=[];
 s.pending.forEach(function(p){s.spec.push(p);L.push('標本が完成した: '+specLabel(p));});
 s.pending=[];
@@ -947,6 +995,7 @@ save();renderAll();shopMsg('標本を依頼しました。次に月を進めた�
 function care(kind){
 var i=selIns();
 if(!i){say('個体がいません');return;}
+if(i.stage==='蛹'&&kind==='mist'){if(i.wet>=100){say('これ以上湿らせると過湿です');return;}i.wet=Math.min(100,i.wet+15);save();renderHome();say('蛹室を崩さないよう、外から霧吹きをした');return;}
 if(i.stage==='蛹'){i.touched=true;save();renderHome();say('蛹に触ってしまった…羽化不全の原因になります');return;}
 if(kind==='feed'){
 if(i.food>=100){say('もうお腹いっぱいです');return;}
@@ -972,19 +1021,27 @@ $('next-season').onclick=function(){
 var danger=s.insects.filter(function(i){return status(i)==='危険';});
 if(!danger.length){doAdvance();return;}
 openModal('危険な個体がいます',danger.map(function(i){return SPID[i.sp].n+'('+i.stage+')は危険な状態です。このまま進めると死にます。';}),[{t:'戻って世話をする',f:closeModal},{t:'それでも月を進める',p:true,f:function(){closeModal();doAdvance();}}]);};
-$('locsel').onchange=function(){s.loc=this.value;save();renderAll();};
+$('locsel').onchange=function(){
+var to=this.value,from=s.loc,c=travelCost(from,to),sel=this;
+if(to===from)return;
+if(s.pts<c){sel.value=from;showResult(['出発地を'+RID[to].n+'へ変えるには '+fmt(c)+'円かかります(所持 '+fmt(s.pts)+')。']);return;}
+openModal('出発地を変えますか',[RID[from].n+' → '+RID[to].n,'移動費 '+fmt(c)+'円がかかります。飼育の気温と相場の季節も、新しい出発地のものになります。'],[{t:'やめる',f:function(){sel.value=from;closeModal();}},{t:'変える',p:true,f:function(){
+closeModal();s.pts-=c;s.loc=to;dest=to;regTab=RID[to].rid;addLog('出発地を'+RID[to].n+'へ変えた(-'+fmt(c)+'円)');save();renderAll();}}]);};
 $('go-gather').onclick=doGather;
 $('sell-go').onclick=sellGo;
+$('give-go').onclick=giveGo;
 $('sell-ins').onchange=function(){lastSell=parseInt(this.value,10)||0;priceFor=0;renderShop();};
 function show(id){
 var all=document.querySelectorAll('.screen');
 for(var i=0;i<all.length;i++){all[i].classList.toggle('active',all[i].id===id);}
-if(id==='gather'){$('result').className='result';renderGather();}
+if(id==='gather'){$('result').className='result';renderGather();renderCand();}
 if(id==='shop'){shopMsg('');lastSell=0;priceFor=0;renderShop();}}
 document.addEventListener('click',function(ev){
 var b=ev.target.closest?ev.target.closest('button'):null;if(!b)return;
 if(b.hasAttribute('data-go')){var gt=b.getAttribute('data-go');if(fxBusy)return;if(gt==='shop'&&!$('shop').classList.contains('active')){shopLoad(function(){show('shop');});return;}show(gt);return;}
 if(b.hasAttribute('data-buy')){buy(b.getAttribute('data-buy'));return;}
+if(b.hasAttribute('data-take')){takeCand(parseInt(b.getAttribute('data-take'),10));return;}
+if(b.hasAttribute('data-sellcase')){sellCase(b.getAttribute('data-sellcase'));return;}
 if(b.hasAttribute('data-spec')){reqSpec(parseInt(b.getAttribute('data-spec'),10));return;}
 if(b.hasAttribute('data-wd')){withdraw(parseInt(b.getAttribute('data-wd'),10));return;}
 if(b.hasAttribute('data-sel')){s.sel=parseInt(b.getAttribute('data-sel'),10);save();renderHome();return;}

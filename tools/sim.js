@@ -51,14 +51,13 @@ const STRATS = {
   idle:      { label: '放置(採集せず世話だけ)', gathers: 0 },
   local:     { label: '地元採集→即出品(UI既定価格)', gathers: 10, ratio: 1.0, travel: 'none' },
   localLow:  { label: '地元採集→安値出品(相場の70%)', gathers: 10, ratio: 0.7, travel: 'none' },
-  grind:     { label: '地元で採集を連打(50回/月)', gathers: 50, ratio: 0.8, travel: 'none', buyCases: { M: 3, L: 3 } },
+  grind:     { label: '地元で採集を上限まで+ケース増設', gathers: 50, ratio: 0.8, travel: 'none', buyCases: { M: 3, L: 3 } },
   travel:    { label: '遠征あり(移動費を払う)', gathers: 10, ratio: 0.8, travel: 'pay', buyCases: { M: 3, L: 3 } },
-  locHack:   { label: '出発地を目的地に変えて移動費0', gathers: 10, ratio: 0.8, travel: 'hack', buyCases: { M: 3, L: 3 } },
   kokuwa:    { label: 'コクワ繁殖特化(小型ケース)', gathers: 10, ratio: 0.8, travel: 'none', breed: 'kokuwa', buyCases: { S: 6 } },
   oku:       { label: 'オオクワ狙い+繁殖', gathers: 30, ratio: 0.8, travel: 'none', breed: 'oku', focus: 'oku', buyCases: { M: 6 } },
-  neglect:   { label: '連打+安い個体は世話せず死なせる', gathers: 50, ratio: 0.8, travel: 'none', buyCases: { M: 3, L: 3 }, neglect: 400 },
-  okuFarm:   { label: '上限テスト: オオクワ繁殖場(ペア・中型8・1万pt から、幼虫は終齢で売る)', gathers: 0, ratio: 0.8, travel: 'none', breed: 'oku', larvaHold: true, setup: 'okuFarm' },
-  okuFarmQ:  { label: '上限テスト: 同上・幼虫は孵化直後に売る', gathers: 0, ratio: 0.8, travel: 'none', breed: 'oku', setup: 'okuFarm', sellHatch: true },
+  give:      { label: '地元採集+安い個体は譲渡して入れ替え', gathers: 50, ratio: 0.8, travel: 'none', buyCases: { M: 3, L: 3 }, give: true },
+  okuFarm:   { label: '上限テスト: オオクワ繁殖場(ペア・中型8・1万pt から、幼虫は終齢で売る)', gathers: 0, ratio: 0.8, travel: 'none', breed: 'oku', larvaHold: true, setup: 'okuFarm', sellIdle: true },
+  okuFarmQ:  { label: '上限テスト: 同上・幼虫は孵化直後に売る', gathers: 0, ratio: 0.8, travel: 'none', breed: 'oku', setup: 'okuFarm', sellHatch: true, sellIdle: true },
 };
 
 function runOne(stratKey, seed, startMonth, h) {
@@ -73,7 +72,8 @@ function runOne(stratKey, seed, startMonth, h) {
   }
   const S = () => E('s');
   const F = { fairValue: E('fairValue'), chance: E('chance'), present: E('present'), env: E('env'), travelCost: E('travelCost'), SPID: E('SPID'), NEED: E('NEED') };
-  const m = { min: S().pts, travel: 0, method: 0, care: 0, shop: 0, caseFee: 0, listFee: 0, sales: 0, sold: 0, oku: 0, okuSales: 0, deaths: 0, neglectDeaths: 0, defect: 0, emerged: 0, gathers: 0, bySp: {}, curve: [] };
+  const HAS_CAND = E('typeof takeCand') === 'function';
+  const m = { gives: 0, min: S().pts, travel: 0, method: 0, care: 0, shop: 0, caseFee: 0, listFee: 0, sales: 0, sold: 0, oku: 0, okuSales: 0, deaths: 0, neglectDeaths: 0, defect: 0, emerged: 0, gathers: 0, bySp: {}, curve: [] };
   const fair = (i) => F.fairValue(i, 100);
   const evCache = {};
   const evOf = (spId, adult) => {
@@ -134,8 +134,15 @@ function runOne(stratKey, seed, startMonth, h) {
     if (!plan) return;
     const home = S().loc;
     for (let g = 0; g < st.gathers; g++) {
-      const s = S();
+      let s = S();
+      if (st.give && s.cases - s.insects.length <= 0) {
+        const keep = keepSet();
+        const low = s.insects.filter(i => !keep.has(i.id) && i.stage !== '蛹').map(i => ({ i, v: fair(i) })).sort((a, b) => a.v - b.v)[0];
+        if (low && low.v < 300) { E(`s.insects=s.insects.filter(function(i){return i.id!==${low.i.id};});`); m.gives++; }
+        s = S();
+      }
       if (s.cases - s.insects.length <= 0) break;
+      if (HAS_CAND && s.gm >= E('GMAX')) break;
       E(`dest='${plan.d}';terr='${plan.ter}';method='${plan.meth}';tod=${plan.t};pendingRestore=false;`);
       if (st.travel === 'hack') E(`s.loc='${plan.d}'`);
       const cost = E('travelCost(s.loc,dest)+METH[method].cost');
@@ -146,16 +153,40 @@ function runOne(stratKey, seed, startMonth, h) {
       m.gathers++;
       const tc = E('travelCost(s.loc,dest)');
       m.travel += Math.min(tc, p0 - S().pts); m.method += (p0 - S().pts) - Math.min(tc, p0 - S().pts);
+      if (HAS_CAND) takePhase(before);
       S().insects.forEach(i => { if (!before.has(i.id) && i.sp === 'oku') m.oku++; });
       if (st.travel === 'hack') E(`s.loc='${home}'`);
     }
   }
 
+  // 新仕様: 見つけた個体から、値打ちの高い順に持ち帰る。give なら安い手持ちを譲渡して入れ替える
+  function takePhase(before) {
+    const listed = () => S().cand.map((c, k) => ({ k, v: fair({ sp: c.sp, stage: c.stage, sex: c.sex, size: c.size, w: c.w, defect: false }), c }))
+      .filter(x => !F.SPID[x.c.sp].prot).sort((a, b) => b.v - a.v);
+    for (let guard = 0; guard < 10; guard++) {
+      const L = listed();
+      const want = L.find(x => E('roomFor')(x.c.sp) && S().cases - S().insects.length > 0);
+      if (want) { E('takeCand(' + want.k + ')'); continue; }
+      if (!st.give || !L.length) break;
+      const keep = keepSet();
+      const mine = S().insects.filter(i => !keep.has(i.id) && i.stage !== '蛹' && !before.has(-1)).map(i => ({ i, v: fair(i) })).sort((a, b) => a.v - b.v);
+      if (!mine.length || mine[0].v * 2 > L[0].v) break;
+      const gid = mine[0].i.id;
+      E(`s.insects=s.insects.filter(function(i){return i.id!==${gid};});`); m.gives++;
+    }
+    E('leaveCand()');
+  }
+
   function buy(k) { const p0 = S().pts; E(`buy('${k}')`); m.shop += p0 - S().pts; return p0 !== S().pts; }
 
   function casePhase() {
-    if (!st.buyCases) return;
     const CS = E('CS');
+    if (st.sellIdle && E('typeof sellCase') === 'function') {
+      const s0 = S();
+      const pending = s0.insects.some(i => i.sp === st.breed && i.stage === '成虫' && i.sex === '♀');
+      if (!pending && s0.cases - s0.insects.length > 1) { for (const z of ['S', 'M', 'L']) { const p0 = S().pts; E(`sellCase('${z}')`); if (S().pts !== p0) { m.shop -= S().pts - p0; break; } } }
+    }
+    if (!st.buyCases) return;
     for (const z of Object.keys(st.buyCases)) {
       while (S().cs[z] < st.buyCases[z] && S().cases < 8 && S().pts > CS[z].p + 1500) { if (!buy('case' + z)) break; }
     }
@@ -218,6 +249,8 @@ function runOne(stratKey, seed, startMonth, h) {
         while (i.food < 30 && n++ < 6) { if (S().inv.jelly < 1 && !buy('jelly')) break; E("care('feed')"); }
         if (i.fresh < 20) E("care('clean')");
         n = 0; while (i.wet < 30 && n++ < 10) E("care('mist')");
+      } else if (i.stage === '蛹' && HAS_CAND) {
+        let n = 0; while (i.wet < 30 && n++ < 10) E("care('mist')"); // 新仕様: 蛹への霧吹きは触った扱いにならない
       }
     }
     return neglectIds;
@@ -338,7 +371,7 @@ function main() {
   out.push('## 種ごとの理論値(関東・夏の相場、状態100、サイズは平均の1.05倍)\n\n' + table(speciesTable()));
   const txt = out.join('\n');
   console.log(txt);
-  const dst = path.join(__dirname, 'sim-result.md');
+  const dst = path.join(__dirname, process.env.OUT || 'sim-result.md');
   fs.writeFileSync(dst, txt);
 }
 main();
