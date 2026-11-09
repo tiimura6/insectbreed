@@ -27,7 +27,7 @@ function makeGame(seed) {
   const els = {};
   const el = () => ({ style: {}, classList: { toggle() {}, add() {}, remove() {} }, setAttribute() {}, querySelectorAll() { return []; }, focus() {}, value: '', innerHTML: '', textContent: '' });
   const ctx = {
-    document: { getElementById: id => els[id] || (els[id] = el()), querySelectorAll: () => [], addEventListener() {} },
+    document: { getElementById: id => els[id] || (els[id] = el()), querySelector: () => null, querySelectorAll: () => [], addEventListener() {}, createElementNS: () => el() },
     localStorage: { getItem: () => null, setItem() {} },
     setTimeout: () => 0, clearTimeout() {}, setInterval: () => 0,
     matchMedia: () => ({ matches: true }), console,
@@ -375,7 +375,7 @@ function main() {
   out.push('## 種ごとの理論値(関東・夏の相場、状態100、サイズは平均の1.05倍)\n\n' + table(speciesTable()));
   const txt = out.join('\n');
   console.log(txt);
-  const dst = path.join(__dirname, process.env.OUT || 'sim-result.md');
+  const dst = path.resolve(__dirname, process.env.OUT || 'sim-result.md');
   fs.writeFileSync(dst, txt);
 }
 main();
