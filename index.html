@@ -17,7 +17,7 @@
 <style>
 :root{--bg:#F3EFE4;--ink:#1F2A1F;--forest:#2F4A35;--amber:#D9822B;--track:#D3CDB9;--warn:#9A4A1C;--sub:#4A5A4C}
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:#E4DFD0;font-family:'Noto Sans JP',system-ui,sans-serif;color:var(--ink)}
+html,body{margin:0;height:100%;background:#2F4A35 url(img/forest.jpg) center/cover fixed;font-family:'Noto Sans JP',system-ui,sans-serif;color:var(--ink)}
 button,select{font-family:inherit}
 button{cursor:pointer}
 button:focus-visible,select:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
@@ -131,6 +131,18 @@ input.num:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 @keyframes fxcoin{from{transform:translateY(0) rotateY(0);opacity:1}to{transform:translateY(520px) rotateY(720deg);opacity:.9}}
 @keyframes fxbell{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
 @media (prefers-reduced-motion:reduce){.fx *{animation-duration:.01s!important;animation-iteration-count:1!important}}
+/* ---- v0.7 写真 ---- */
+body::before{content:'';position:fixed;inset:0;background:rgba(31,42,31,.55);pointer-events:none}
+.app{box-shadow:0 0 40px rgba(0,0,0,.35)}
+.hero{position:relative;border-radius:18px;overflow:hidden;min-height:96px;display:flex;align-items:flex-end;padding:14px 16px;color:#fff;background:#2F4A35 center/cover}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(20,32,20,.7))}
+.hero>*{position:relative}
+.hero h2{color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.hero small{display:block;font-size:12px;opacity:.9}
+.hero.log{background-image:url(img/log.jpg)}
+.zprog{background:linear-gradient(90deg,rgba(47,74,53,.95),rgba(47,74,53,.7)),url(img/konara.jpg) center/cover}
+.intro-photo{width:100%;height:150px;object-fit:cover;border-radius:14px}
+.credit{font-size:11px;color:var(--sub);line-height:1.6}
 /* ---- v0.5 図鑑・説明 ---- */
 .zprog{display:flex;align-items:center;gap:12px;background:var(--forest);color:var(--bg);border-radius:16px;padding:12px 14px}
 .zprog .ring{flex:0 0 auto;width:58px;height:58px}
@@ -355,7 +367,7 @@ button:not(:disabled):active{transform:scale(.96)}
 
 <section class="screen" id="gather" aria-label="採集画面">
 <button type="button" class="back" data-go="home">← 育成画面へ</button>
-<h2>採集に出かける</h2>
+<div class="hero log"><div><h2>採集に出かける</h2><small>場所・地形・方法・時間帯を選んで出発</small></div></div>
 <div class="stage" style="height:180px;min-height:180px" id="forest"></div>
 <div class="sitrep" id="sitrep" role="status" aria-live="polite"></div>
 
@@ -405,6 +417,7 @@ button:not(:disabled):active{transform:scale(.96)}
 <div class="rule"><b>保護種は捕まえません。</b>国内希少野生動植物種などに指定された虫は、捕獲・譲渡が法律で禁止されています。図鑑には「見かけた」記録だけが残ります。最新の指定は環境省の一覧で確認してください。</div>
 <h3>このアプリについて</h3>
 <div class="rule" id="about"><b>昆虫専門店 常北ファーム(茨城県城里町)が作っています。</b>ゲームの中の用品や値段は、お店の商品とは関係ありません。本物の虫を見たくなったら、お店のサイトをのぞいてみてください。<br><a href="https://planet-studios-syros.com/" target="_blank" rel="noopener">常北ファームのサイトを開く</a></div>
+<p class="credit">写真: Wikimedia Commons より。「Forest of deciduous broad-leaved tree in Yoro Mountains」(CC0)、「Quercus serrata Kanagawa」(パブリックドメイン)、「Moss-covered decaying log on a forest floor」(CC0)。</p>
 <h3>データ</h3>
 <button type="button" class="small-btn" id="intro-again">遊び方をもう一度見る</button>
 <button type="button" class="small-btn danger" id="reset">データを消して、はじめからにする</button>
@@ -898,7 +911,7 @@ var best=Object.keys(s.rec).filter(function(id){return SPID[id];}).map(function(
 $('records').innerHTML=r+(best?'<li><b>種ごとの最大サイズ</b><span></span></li>'+best:'');}
 /* ---------- はじめての説明 ---------- */
 var INTRO=[
-['ようこそ!','<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="#E2EBD9"/><ellipse cx="60" cy="70" rx="26" ry="30" fill="#4A3426"/><ellipse cx="60" cy="40" rx="14" ry="12" fill="#3A281D"/><path d="M50 34 C36 24 36 10 48 10 M70 34 C84 24 84 10 72 10" stroke="#3A281D" stroke-width="5" fill="none" stroke-linecap="round"/></svg>','日本の昆虫を<b>採集</b>して、<b>育てて</b>、<b>増やす</b>ゲームです。47都道府県の季節・天気・地形で、出会える虫が変わります。'],
+['ようこそ!','<img class="intro-photo" src="img/forest.jpg" alt="落葉広葉樹の森">','日本の昆虫を<b>採集</b>して、<b>育てて</b>、<b>増やす</b>ゲームです。47都道府県の季節・天気・地形で、出会える虫が変わります。'],
 ['採集に出かける','<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="#BFE3F2"/><rect x="14" y="78" width="92" height="28" fill="#4F7F3F"/><rect x="30" y="40" width="8" height="40" fill="#5A4636"/><circle cx="34" cy="38" r="18" fill="#2F7A3A"/><rect x="78" y="34" width="8" height="46" fill="#5A4636"/><circle cx="82" cy="32" r="20" fill="#3F8F4A"/><circle cx="60" cy="24" r="8" fill="#FFF27A"/></svg>','場所・地形・採集方法・時間帯を選んで出発します。採集は<b>月に3回</b>まで。見つけた虫から、持ち帰る虫を選びます。はじめての県は虫に出会いやすくなります。'],
 ['お世話と月送り','<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="#F3E7C8"/><rect x="26" y="34" width="68" height="62" rx="10" fill="#fff" stroke="#2F4A35" stroke-width="4"/><rect x="26" y="34" width="68" height="16" rx="8" fill="#9A4A1C"/><text x="60" y="86" text-anchor="middle" font-size="30" font-weight="900" fill="#1F2A1F">月</text></svg>','幼虫はマット交換、成虫はゼリー、どちらも霧吹きでお世話します。メーターは現実の時間で減ります。<b>「1か月進める」</b>で幼虫が育ち、蛹になり、羽化します。'],
 ['売る・増やす','<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="#FFE9A0"/><circle cx="60" cy="60" r="30" fill="#E8B84A" stroke="#B9801A" stroke-width="5"/><text x="60" y="70" text-anchor="middle" font-size="28" font-weight="900" fill="#7A5210">円</text></svg>','ショップの委託販売で虫を売り、ポイントで用品やケースを買います。同じ種の雌雄をペアにして産卵セットを組むと、幼虫が生まれます。'],
